@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Skyline: When to go where</title>
+  <link rel="stylesheet" href="./css/nouislider.min.css">
+  <link rel="stylesheet" href="./css/nouislider.tooltips.css">
+  <link rel="stylesheet" href="./css/weather-icons.min.css">
+  <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+    <div id="main">
+        <div class="content-wrap">
+            <div class="header-section">
+                <div class="header">
+                    <h2 class="logo">Skyline</h2>
+                </div>
+                <div class="tagline-section">
+                    <h1 class="tagline">When you should go where</h1>
+                </div>
+            </div>
+
+        <div class="filters-section">
+            <div class="control-wrap temperature-wrap">
+                <div type="range" id="temperature-range"></div>
+            </div>
+            <div class="control-wrap precipitation-wrap" id="precipitation-wrap-id">
+                <button type="button" class="precipitation-control" id="low-precipitation" onclick="addPrecipitationSelectedClass(this)" value="0"><i class="wi wi-day-sunny"></i><div class="precipitation-button-label">Low precipitation</div></button>
+                <button type="button" class="precipitation-control" id="medium-precipitation" onclick="addPrecipitationSelectedClass(this)" value="1"><i class="wi wi-day-showers"></i><div class="precipitation-button-label">Medium precipitation</div></button>
+                <button type="button" class="precipitation-control" id="high-precipitation" onclick="addPrecipitationSelectedClass(this)" value="2"><i class="wi wi-rain-mix"></i><div class="precipitation-button-label">High precipitation</div></button>
+            </div>
+        </div>
+
+        <div class="date-map-section">
+            <div class="month-wrap" id="month-wrap-id">
+                <button type="button" class="month-button" onclick="addSelectedClass(this)" value="0">Jan</button>
+                <button type="button" class="month-button" onclick="addSelectedClass(this)" value="1">Feb</button>
+                <button type="button" class="month-button" onclick="addSelectedClass(this)" value="2">Mar</button>
+                <button type="button" class="month-button" onclick="addSelectedClass(this)" value="3">Apr</button>
+                <button type="button" class="month-button" onclick="addSelectedClass(this)" value="4">May</button>
+                <button type="button" class="month-button" onclick="addSelectedClass(this)" value="5">Jun</button>
+                <button type="button" class="month-button" onclick="addSelectedClass(this)" value="6">Jul</button>
+                <button type="button" class="month-button" onclick="addSelectedClass(this)" value="7">Aug</button>
+                <button type="button" class="month-button" onclick="addSelectedClass(this)" value="8">Sep</button>
+                <button type="button" class="month-button" onclick="addSelectedClass(this)" value="9">Oct</button>
+                <button type="button" class="month-button" onclick="addSelectedClass(this)" value="10">Nov</button>
+                <button type="button" class="month-button" onclick="addSelectedClass(this)" value="11">Dec</button>
+            </div>
+            <div class="maps-section">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">Made with love by <a href="http://www.nathanrkane.com">Nathan Kane</a> in 2016. Weather data from <a href="http://www.wunderground.com/">Weather Underground</a></div>
+    </div>
+    <div class="add-places-section" style="z-index: 5">
+        <form>
+            <input type="text" name="place_name" placeholder="Place name" id="place_name">
+            <input type="text" name="latitude" placeholder="Latitude" id="latitude">
+            <input type="text" name="longitude" placeholder="Longitude" id="longitude">
+            <span id="calls-number"></span>
+            <button type="button" onclick="startAdding()">Start</button
+        </form>
+    </div>
+    <script src="./nouislider.min.js"></script>
+    <script src="https://cdn.firebase.com/js/client/2.4.0/firebase.js"></script>
+    <script src="./wNumb.js"></script>
+    <script src="./main.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOG7obGpHwZI3iiGJzIqiOCruwy6XSUSQ"></script>
+</body>
+</html>
