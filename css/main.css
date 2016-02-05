@@ -48,7 +48,7 @@ h1, h2 {
 
 .tagline {
     font-size: 2rem;
-    text-shadow: -2px 2px 0 rgba(255, 105, 180, 1);
+    text-shadow: -2px 2px 0 rgba(255, 105, 180, 0.7);
 }
 
 .header-section {

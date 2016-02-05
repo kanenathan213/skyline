@@ -65,20 +65,28 @@ var initMap = function() {
 
 function renderCities() {
 
+    deleteMarkers();
+    var latitude, longitude;
     for (var key in places_list) {
-        var latitude = places_list[key][0].latitude;
-        var longitude = places_list[key][0].longitude;
 
-        placeMarker(latitude, longitude);
+        if (places_list[key][selected_month].precip.avg["in"] < 0.05 && places_list[key][selected_month].precip.avg["in"] > 0) {
+            if (places_list[key][selected_month].temp_high.avg["F"] < 90 && places_list[key][selected_month].temp_high.avg["F"] > 50) {
+                latitude = places_list[key][0].latitude;
+                longitude = places_list[key][0].longitude;
+                prepMarkers(latitude, longitude);
+                setMapOnAll(map);
+            }
+        }
     }
 }
 
-function placeMarker(lat, lng) {
+var markers = [];
+
+function prepMarkers(lat, lng) {
 
     //   var infowindow = new google.maps.InfoWindow({
     //       content: element.name
     //   });
-
       console.log(typeof lat);
 
       var latLng = {
@@ -90,12 +98,32 @@ function placeMarker(lat, lng) {
         position: latLng,
         map: map
       })
+
+      markers.push(marker);
               //title: someTitle // fix
 
 
     //   marker.addListener('click', function() {
     //     infowindow.open(map, marker);
     //   });
+}
+
+// Sets the map on all markers in the array.
+function setMapOnAll(map) {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(map);
+  }
+}
+
+// Removes the markers from the map, but keeps them in the array.
+function clearMarkers() {
+  setMapOnAll(null);
+}
+
+// Deletes all markers in the array by removing references to them.
+function deleteMarkers() {
+  clearMarkers();
+  markers = [];
 }
 
 function formatMonthForRequest(month) {
@@ -114,13 +142,6 @@ function formatMonthForRequest(month) {
         cleanedUpMonth = monthAsString;
     }
     return cleanedUpMonth;
-}
-
-function getWeatherData() {
-
-     city_data.forEach(function(city) {
-
-     })
 }
 
 var selected_month = new Date().getMonth() + 1;
@@ -161,7 +182,7 @@ function addSelectedClass(element) {
     removeSelectedClass(element.parentNode);
     element.className += " selected";
     selected_month = element.value;
-    getWeatherData();
+    renderCities();
 }
 
 function removeSelectedClass(element) {
@@ -174,7 +195,7 @@ function addPrecipitationSelectedClass(element) {
     removePrecipitationSelectedClass(element.parentNode);
     element.className += " selected";
     selected_precipitation = element.value;
-    getWeatherData();
+    renderCities();
 }
 
 function removePrecipitationSelectedClass(element) {
