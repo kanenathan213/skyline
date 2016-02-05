@@ -78,7 +78,7 @@ function renderCities() {
                 && places_list[key][selected_month].temp_high.avg["F"] > temperature_range.bottom) {
                 latitude = places_list[key][0].latitude;
                 longitude = places_list[key][0].longitude;
-                prepMarkers(latitude, longitude);
+                prepMarkers(latitude, longitude, key);
                 setMapOnAll(map);
             }
         }
@@ -102,29 +102,28 @@ var precipitation_range = [
 
 var markers = [];
 
-function prepMarkers(lat, lng) {
+function prepMarkers(lat, lng, name) {
 
-    //   var infowindow = new google.maps.InfoWindow({
-    //       content: element.name
-    //   });
+      var infowindow = new google.maps.InfoWindow({
+          content: name
+      });
 
       var latLng = {
           "lat": Number(lat),
           "lng": Number(lng)
       }
-
+      console.log(infowindow);
       var marker = new google.maps.Marker({
         position: latLng,
-        map: map
+        map: map,
+        title: 'thing'
       })
 
+      marker.addListener('click', function() {
+        infowindow.open(map, marker);
+      });
+
       markers.push(marker);
-              //title: someTitle // fix
-
-
-    //   marker.addListener('click', function() {
-    //     infowindow.open(map, marker);
-    //   });
 }
 
 // Sets the map on all markers in the array.
@@ -197,7 +196,9 @@ function initializeSelectedClasses() {
     }
 }
 
-function addSelectedClass(element) {
+function addSelectedClass(event) {
+
+    var element = event.target;
     removeSelectedClass(element.parentNode);
     element.className += " selected";
     selected_month = element.value;
