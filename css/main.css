@@ -40,7 +40,6 @@ h1, h2 {
 .logo {
     text-transform: uppercase;
     font-size: 1.1rem;
-    opacity: 0.65;
     letter-spacing: 0.7rem;
     color: hotpink;
     font-weight: lighter;
@@ -64,23 +63,23 @@ h1, h2 {
 .filters-section {
     align-items: center;
     background: white;
+    border-bottom-left-radius: 10px;
     display: flex;
+    flex-direction: column;
     justify-content: space-around;
-    max-width: 960px;
-    min-height: 95px;
-    margin: 15px auto 0;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    border-bottom: 1px solid hsla(0, 0%, 90%, 1);
+    height: 100%;
+    margin: 0 auto;
     position: relative;
+    width: 100%;
 }
 
 .date-wrap {
     text-align: center;
 }
 
-#temperature-range {
-    min-width: 400px;
+#temperature-range,
+#precipitation-range {
+    min-height: 200px;
 }
 
 #temperature-range:hover {
@@ -94,6 +93,10 @@ h1, h2 {
 .noUi-handle {
     cursor: -webkit-grab;
     cursor: grab;
+}
+
+.noUi-base {
+    height: 200px;
 }
 
 #map {
@@ -110,10 +113,6 @@ h1, h2 {
     }
 }
 
-.control-wrap {
-    display: inline-block;
-}
-
 .month-button {
     background: white;
     border: none;
@@ -127,20 +126,16 @@ h1, h2 {
     flex-grow: 1;
 }
 
-.month-button:focus,
-.precipitation-control:focus {
+.month-button:focus {
     outline: none;
 }
 
-.precipitation-button-label {
-    font-size: 1rem;
-    margin-top: 5px;
-    line-height: 1.2rem;
+.month-button:first-child {
+    border-top-left-radius: 10px;
 }
 
 .month-button:last-child {
-    border-bottom-left-radius: 10px;
-    border-bottom: none;
+    border-top-right-radius: 10px;
 }
 
 .month-button:hover {
@@ -152,39 +147,21 @@ h1, h2 {
     background: blue;
 }
 
-.precipitation-control {
-    background: white;
-    padding: 10px 15px;
-    border: none;
-    border-left: 1px solid hsla(0, 0%, 90%, 1);
-    font-size: 2rem;
-    flex-basis: 33.3%;
-    transition: background .3s ease-out;
-}
-
-.precipitation-control:last-child {
-    border-top-right-radius: 10px;
-}
-
-.precipitation-control:hover {
-    cursor: pointer;
-    background: hsla(0, 0%, 90%, 1);
-}
-
 #calls-number {
     color: white;
     min-width: 100px;
 }
 
-.temperature-wrap,
-.precipitation-wrap {
-    flex-basis: 50%;
+.control-wrap {
+    align-items: center;
     display: flex;
     justify-content: center;
 }
 
-.precipitation-wrap {
-    justify-content: center;
+@media only screen and (min-width : 480px) {
+    .control-wrap {
+
+    }
 }
 
 .date-map-section {
@@ -198,9 +175,8 @@ h1, h2 {
 
 .month-wrap {
     display: flex;
-    flex-direction: column;
     height: 100%;
-    flex-basis: 20%;
+    margin-top: 15px;
 }
 
 .maps-section {
@@ -208,7 +184,6 @@ h1, h2 {
     height: 100%;
 }
 
-.precipitation-control.selected,
 .month-button.selected {
     background: hotpink;
     color: white;

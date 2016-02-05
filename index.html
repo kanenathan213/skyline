@@ -19,32 +19,28 @@
                     <h1 class="tagline">When you should go where</h1>
                 </div>
             </div>
-
-        <div class="filters-section">
-            <div class="control-wrap temperature-wrap">
-                <div type="range" id="temperature-range"></div>
-            </div>
-            <div class="control-wrap precipitation-wrap" id="precipitation-wrap-id">
-                <button type="button" class="precipitation-control" id="low-precipitation" onclick="addPrecipitationSelectedClass(this)" value="0"><i class="wi wi-day-sunny"></i><div class="precipitation-button-label">Low precipitation</div></button>
-                <button type="button" class="precipitation-control" id="medium-precipitation" onclick="addPrecipitationSelectedClass(this)" value="1"><i class="wi wi-day-showers"></i><div class="precipitation-button-label">Medium precipitation</div></button>
-                <button type="button" class="precipitation-control" id="high-precipitation" onclick="addPrecipitationSelectedClass(this)" value="2"><i class="wi wi-rain-mix"></i><div class="precipitation-button-label">High precipitation</div></button>
-            </div>
+        <div class="month-wrap" id="month-wrap-id" onclick="addSelectedClass(event)">
+            <button type="button" class="month-button" value="0">Jan</button>
+            <button type="button" class="month-button" value="1">Feb</button>
+            <button type="button" class="month-button" value="2">Mar</button>
+            <button type="button" class="month-button" value="3">Apr</button>
+            <button type="button" class="month-button" value="4">May</button>
+            <button type="button" class="month-button" value="5">Jun</button>
+            <button type="button" class="month-button" value="6">Jul</button>
+            <button type="button" class="month-button" value="7">Aug</button>
+            <button type="button" class="month-button" value="8">Sep</button>
+            <button type="button" class="month-button" value="9">Oct</button>
+            <button type="button" class="month-button" value="10">Nov</button>
+            <button type="button" class="month-button" value="11">Dec</button>
         </div>
-
         <div class="date-map-section">
-            <div class="month-wrap" id="month-wrap-id" onclick="addSelectedClass(event)">
-                <button type="button" class="month-button" value="0">Jan</button>
-                <button type="button" class="month-button" value="1">Feb</button>
-                <button type="button" class="month-button" value="2">Mar</button>
-                <button type="button" class="month-button" value="3">Apr</button>
-                <button type="button" class="month-button" value="4">May</button>
-                <button type="button" class="month-button" value="5">Jun</button>
-                <button type="button" class="month-button" value="6">Jul</button>
-                <button type="button" class="month-button" value="7">Aug</button>
-                <button type="button" class="month-button" value="8">Sep</button>
-                <button type="button" class="month-button" value="9">Oct</button>
-                <button type="button" class="month-button" value="10">Nov</button>
-                <button type="button" class="month-button" value="11">Dec</button>
+            <div class="filters-section">
+                <div class="control-wrap temperature-wrap">
+                    <div type="range" id="temperature-range"></div>
+                </div>
+                <div class="control-wrap precipitation-wrap" id="precipitation-wrap-id">
+                    <div type="range" id="precipitation-range"></div>
+                </div>
             </div>
             <div class="maps-section">
                 <div id="map"></div>

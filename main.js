@@ -1,7 +1,6 @@
 'use strict';
 
 var myFirebaseRef = new Firebase("https://skyline-maps.firebaseio.com/");
-
 var places_list_ref = new Firebase("https://skyline-maps.firebaseio.com/places");
 
 var places_list = {};
@@ -30,13 +29,15 @@ var initMap = function() {
  var connectSlider = document.getElementById('temperature-range');
 
  noUiSlider.create(connectSlider, {
- 	start: [temperature_range.bottom, temperature_range.top],
+ 	start: [weather_ranges.temperature.bottom, weather_ranges.temperature.top],
  	connect: true,
     tooltips: [true, true],
  	range: {
  		'min': 0,
  		'max': 100
  	},
+    direction: 'rtl',
+    orientation: 'vertical',
     format: wNumb({
 		decimals: 0,
 		postfix: '&#' + 8457,
@@ -58,10 +59,51 @@ var initMap = function() {
 
  	connectBar.style[side] = offset + '%';
 
-    temperature_range.bottom = connectSlider.noUiSlider.get()[0];
-    temperature_range.top = connectSlider.noUiSlider.get()[1];
+    weather_ranges.temperature.bottom = connectSlider.noUiSlider.get()[0].replace(/&#8457/g,'');
+    weather_ranges.temperature.top = connectSlider.noUiSlider.get()[1].replace(/&#8457/g,'');
     renderCities();
  });
+
+ var precipitationSlider = document.getElementById('precipitation-range');
+
+ noUiSlider.create(precipitationSlider, {
+ 	start: [weather_ranges.precipitation.bottom, weather_ranges.precipitation.top],
+ 	connect: true,
+    margin: 10,
+    tooltips: [true, true],
+ 	range: {
+ 		'min': 0,
+ 		'max': 100
+ 	},
+    direction: 'rtl',
+    orientation: 'vertical',
+    format: wNumb({
+        decimals: 0,
+        postfix: '%',
+    })
+ });
+
+
+ var precipConnectBar = document.createElement('div'),
+	precipConnectBase = precipitationSlider.getElementsByClassName('noUi-base')[0],
+	precipConnectHandles = precipitationSlider.getElementsByClassName('noUi-origin');
+
+ precipitationSlider.noUiSlider.on('update', function( values, handle ) {
+
+ 	var side = handle ? 'right' : 'left',
+ 		offset = (precipConnectHandles[handle].style.left).slice(0, - 1);
+
+ 	if ( handle === 1 ) {
+ 		offset = 100 - offset;
+ 	}
+
+ 	precipConnectBar.style[side] = offset + '%';
+
+    weather_ranges.precipitation.bottom = precipitationSlider.noUiSlider.get()[0].replace(/%/g, '');
+    weather_ranges.precipitation.top = precipitationSlider.noUiSlider.get()[1].replace(/%/g, '');
+    renderCities();
+ });
+
 }
 
 function renderCities() {
@@ -70,35 +112,24 @@ function renderCities() {
     var latitude, longitude;
     for (var key in places_list) {
 
-        var precip_avg = places_list[key][selected_month].precip.avg["in"];
+        var precip_chance = places_list[key][selected_month].chance_of.chanceofprecip.percentage;
 
-        if (Number(precip_avg) < precipitation_range[selected_precipitation].high
-            && Number(precip_avg) > precipitation_range[selected_precipitation].low ) {
-            if (places_list[key][selected_month].temp_high.avg["F"] < temperature_range.top
-                && places_list[key][selected_month].temp_high.avg["F"] > temperature_range.bottom) {
-                latitude = places_list[key][0].latitude;
-                longitude = places_list[key][0].longitude;
-                prepMarkers(latitude, longitude, key);
-                setMapOnAll(map);
+        if (Number(precip_chance) < Number(weather_ranges.precipitation.top)
+            && Number(precip_chance) > Number(weather_ranges.precipitation.bottom))
+            {
+                console.log("made it through precipitation band");
+
+                if (places_list[key][selected_month].temp_high.avg["F"] < Number(weather_ranges.temperature.top)
+                    && places_list[key][selected_month].temp_high.avg["F"] > Number(weather_ranges.temperature.bottom))
+                    {
+                        latitude = places_list[key][0].latitude;
+                        longitude = places_list[key][0].longitude;
+                        prepMarkers(latitude, longitude, key);
+                        setMapOnAll(map);
+                    }
             }
-        }
     }
 }
-
-var precipitation_range = [
-    {
-        "low": -1,
-        "high": 0.1
-    },
-    {
-        "low": 0.1,
-        "high": 1
-    },
-    {
-        "low": 1,
-        "high": 100
-    }
-];
 
 var markers = [];
 
@@ -112,7 +143,6 @@ function prepMarkers(lat, lng, name) {
           "lat": Number(lat),
           "lng": Number(lng)
       }
-      console.log(infowindow);
       var marker = new google.maps.Marker({
         position: latLng,
         map: map,
@@ -147,7 +177,6 @@ function deleteMarkers() {
 function formatMonthForRequest(month) {
 
     var monthAsNumber = Number(month);
-
     monthAsNumber += 1;
 
     var cleanedUpMonth = '';
@@ -163,18 +192,22 @@ function formatMonthForRequest(month) {
 }
 
 var selected_month = new Date().getMonth() + 1;
-var selected_precipitation = 0;
-initializeSelectedClasses();
+initializeSelectedMonth();
 
-var temperature_range = {
-    "bottom": 37,
-    "top": 80,
-    "scale": 'F'
+var weather_ranges = {
+    "temperature": {
+        "bottom": 37,
+        "top": 80,
+        "scale": 'F'
+    },
+    "precipitation": {
+        "bottom": 0,
+        "top": 40
+    }
 }
 
-function initializeSelectedClasses() {
+function initializeSelectedMonth() {
     var month_wrap = document.getElementById("month-wrap-id");
-    var precipitation_wrap = document.getElementById("precipitation-wrap-id");
 
     if (selected_month === 11) {
         selected_month = 0;
@@ -183,14 +216,6 @@ function initializeSelectedClasses() {
     for (var i = 0; i < month_wrap.children.length; i++) {
         if (i === selected_month) {
             month_wrap.children[i].className += " selected";
-            break;
-        }
-    }
-
-    for (var j = 0; j < precipitation_wrap.children.length; j++) {
-        console.log(selected_precipitation);
-        if (j === selected_precipitation) {
-            precipitation_wrap.children[j].className += " selected";
             break;
         }
     }
@@ -208,19 +233,6 @@ function addSelectedClass(event) {
 function removeSelectedClass(element) {
     for (var i = 0; i < element.children.length; i++) {
         element.children[i].className = "month-button";
-    }
-}
-
-function addPrecipitationSelectedClass(element) {
-    removePrecipitationSelectedClass(element.parentNode);
-    element.className += " selected";
-    selected_precipitation = element.value;
-    renderCities();
-}
-
-function removePrecipitationSelectedClass(element) {
-    for (var i = 0; i < element.children.length; i++) {
-        element.children[i].className = "precipitation-control";
     }
 }
 
@@ -250,8 +262,6 @@ function addNewPlace() {
               var json_response = JSON.parse(xhttp.response);
               firebase_payload = json_response.trip;
 
-              console.log("here");
-
               firebase_payload.latitude = latitude;
               firebase_payload.longitude = longitude;
 
@@ -261,8 +271,6 @@ function addNewPlace() {
 
         var request_month = formatMonthForRequest(selected_month);
         var formatted_upload_month = formatMonthForRequest(upload_month);
-
-        console.log(formatted_upload_month);
 
         var filter_date = {
             month: request_month,
@@ -282,8 +290,8 @@ function addNewPlace() {
                          + ','
                          + longitude
                          + ".json";
-        // xhttp.open("GET", endpoint, true);
-        // xhttp.send();
+        xhttp.open("GET", endpoint, true);
+        xhttp.send();
 
         console.log(endpoint);
 
@@ -293,7 +301,6 @@ function addNewPlace() {
 
         ++upload_month;
         updateUICalls();
-
 }
 
 var pull_interval;
