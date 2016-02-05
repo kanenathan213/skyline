@@ -23,7 +23,7 @@ a {
 
 .content-wrap {
     margin: auto;
-    padding: 10px;
+    padding: 0 10px;
     width: 100vw;
     position: relative;
 }
@@ -44,16 +44,21 @@ h1, h2 {
     letter-spacing: 0.7rem;
     color: hotpink;
     font-weight: lighter;
+    font-family: 'Martel Sans', sans-serif;
 }
 
 .tagline {
-    font-size: 2rem;
+    font-size: 3.5rem;
+    line-height: 3.7rem;
     text-shadow: -2px 2px 0 rgba(255, 105, 180, 0.7);
+    font-family: 'Playfair Display', serif;
 }
 
 .header-section {
     display: flex;
     flex-direction: column;
+    margin: 0 auto 20px;
+    padding-top: 20px;
 }
 
 .header,
@@ -61,17 +66,31 @@ h1, h2 {
     text-align: center;
 }
 
+.main-section {
+    display: flex;
+    justify-content: center;
+    min-height: 70vh;
+    align-items: flex-end;
+}
+
 .filters-section {
     align-items: center;
     background: white;
     border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    height: 100%;
-    margin: 0 auto;
+    height: 60vh;
     position: relative;
-    width: 100%;
+    width: 30%;
+    flex-grow: 1;
+    transform: translateY(-8px);
+}
+
+.noUi-vertical .noUi-handle-lower .noUi-tooltip {
+    right: 120%;
+    left: auto;
 }
 
 .date-wrap {
@@ -97,20 +116,19 @@ h1, h2 {
 }
 
 .noUi-base {
-    height: 190px;
+    height: 150px;
 }
 
 #map {
-    height: 400px;
+    height: 100%;
     width: 100vw;
 }
 
 @media only screen and (min-width : 480px) {
     #map {
-        width: 60vw;
-        height: 100%;
-        margin: 0 auto;
         border-bottom-right-radius: 10px;
+        width: 100%;
+        margin: 0;
     }
 }
 
@@ -167,23 +185,21 @@ h1, h2 {
 }
 
 .date-map-section {
-    align-items: flex-start;
     display: flex;
     height: 70vh;
-    justify-content: center;
     position: relative;
     margin: 0 auto;
+    flex-direction: column;
 }
 
 .month-wrap {
     display: flex;
-    height: 100%;
     margin-top: 15px;
 }
 
 .maps-section {
     display: inline-block;
-    height: 100%;
+    height: 60vh;
 }
 
 .month-button.selected {
@@ -195,9 +211,8 @@ h1, h2 {
     opacity: 0.8;
     font-size: 0.8rem;
     position: absolute;
-    bottom: 0;
+    bottom: 3%;
     text-align: center;
-    padding-bottom: 1%;
     max-width: 960px;
     margin: 0 auto;
     left: 0;
@@ -218,10 +233,14 @@ a.footer:hover {
     color: #404040;
 }
 
-.temp-label {
+.filter-label {
     text-transform: uppercase;
     color: #404040;
     text-align: center;
+    padding: 7px 0;
     font-size: 0.9rem;
-    padding: 0 5px;
+}
+
+.precip-label {
+    margin-top: 5px;
 }

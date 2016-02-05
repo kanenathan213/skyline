@@ -48,6 +48,7 @@ var initMap = function() {
  		'min': 0,
  		'max': 100
  	},
+    margin: 10,
     direction: 'rtl',
     orientation: 'vertical',
     format: wNumb({
