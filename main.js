@@ -2,6 +2,18 @@
 
 var myFirebaseRef = new Firebase("https://skyline-maps.firebaseio.com/");
 
+var places_list_ref = new Firebase("https://skyline-maps.firebaseio.com/places");
+
+var places_list = {};
+
+places_list_ref.on("value", function(snapshot) {
+  places_list = snapshot.val();
+  console.log(places_list);
+  renderCities();
+}, function (errorObject) {
+  console.log("The read failed: " + errorObject.code);
+});
+
 var WU_API_KEY = "8c6b1a4b7c885a22";
 
 var map = null;
@@ -9,19 +21,11 @@ var map = null;
 var initMap = function() {
 
   map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 10, lng: 10},
+    center: {lat: 20, lng: 20},
     scrollwheel: true,
     zoom: 2,
     minZoom: 2
   });
-
- //  var new_bounds = new google.maps.LatLngBounds(
- //      new google.maps.LatLng(-85.05115, 180),
- //      new google.maps.LatLng(85.05115, -180)
- //  );
- //
- // map.fitBounds(new_bounds);
- // map.setCenter({lat: 0, lng: 90});
 
  var connectSlider = document.getElementById('temperature-range');
 
@@ -45,12 +49,9 @@ var initMap = function() {
 
  connectSlider.noUiSlider.on('update', function( values, handle ) {
 
- 	// Pick left for the first handle, right for the second.
  	var side = handle ? 'right' : 'left',
- 	// Get the handle position and trim the '%' sign.
  		offset = (connectHandles[handle].style.left).slice(0, - 1);
 
- 	// Right offset is 100% - left offset
  	if ( handle === 1 ) {
  		offset = 100 - offset;
  	}
@@ -62,26 +63,39 @@ var initMap = function() {
  });
 }
 
-function placeMarkers(weather_data) {
+function renderCities() {
 
-  console.log(typeof weather_data);
+    for (var key in places_list) {
+        var latitude = places_list[key][0].latitude;
+        var longitude = places_list[key][0].longitude;
 
-  city_data.forEach(function(element) {
+        placeMarker(latitude, longitude);
+    }
+}
 
-      var infowindow = new google.maps.InfoWindow({
-          content: element.name
-      });
+function placeMarker(lat, lng) {
+
+    //   var infowindow = new google.maps.InfoWindow({
+    //       content: element.name
+    //   });
+
+      console.log(typeof lat);
+
+      var latLng = {
+          "lat": Number(lat),
+          "lng": Number(lng)
+      }
 
       var marker = new google.maps.Marker({
-        position: element.latlong,
-        map: map,
-        title: weather_data.trip.title
+        position: latLng,
+        map: map
       })
+              //title: someTitle // fix
 
-      marker.addListener('click', function() {
-        infowindow.open(map, marker);
-      });
-  })
+
+    //   marker.addListener('click', function() {
+    //     infowindow.open(map, marker);
+    //   });
 }
 
 function formatMonthForRequest(month) {
@@ -227,8 +241,8 @@ function addNewPlace() {
                          + ','
                          + longitude
                          + ".json";
-        xhttp.open("GET", endpoint, true);
-        xhttp.send();
+        // xhttp.open("GET", endpoint, true);
+        // xhttp.send();
 
         console.log(endpoint);
 
@@ -240,7 +254,6 @@ function addNewPlace() {
         updateUICalls();
 
 }
-
 
 var pull_interval;
 
