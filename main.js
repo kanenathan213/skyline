@@ -60,6 +60,7 @@ var initMap = function() {
 
     temperature_range.bottom = connectSlider.noUiSlider.get()[0];
     temperature_range.top = connectSlider.noUiSlider.get()[1];
+    renderCities();
  });
 }
 
@@ -69,8 +70,12 @@ function renderCities() {
     var latitude, longitude;
     for (var key in places_list) {
 
-        if (places_list[key][selected_month].precip.avg["in"] < 0.05 && places_list[key][selected_month].precip.avg["in"] > 0) {
-            if (places_list[key][selected_month].temp_high.avg["F"] < 90 && places_list[key][selected_month].temp_high.avg["F"] > 50) {
+        var precip_avg = places_list[key][selected_month].precip.avg["in"];
+
+        if (Number(precip_avg) < precipitation_range[selected_precipitation].high
+            && Number(precip_avg) > precipitation_range[selected_precipitation].low ) {
+            if (places_list[key][selected_month].temp_high.avg["F"] < temperature_range.top
+                && places_list[key][selected_month].temp_high.avg["F"] > temperature_range.bottom) {
                 latitude = places_list[key][0].latitude;
                 longitude = places_list[key][0].longitude;
                 prepMarkers(latitude, longitude);
@@ -80,6 +85,21 @@ function renderCities() {
     }
 }
 
+var precipitation_range = [
+    {
+        "low": -1,
+        "high": 0.1
+    },
+    {
+        "low": 0.1,
+        "high": 1
+    },
+    {
+        "low": 1,
+        "high": 100
+    }
+];
+
 var markers = [];
 
 function prepMarkers(lat, lng) {
@@ -87,7 +107,6 @@ function prepMarkers(lat, lng) {
     //   var infowindow = new google.maps.InfoWindow({
     //       content: element.name
     //   });
-      console.log(typeof lat);
 
       var latLng = {
           "lat": Number(lat),
