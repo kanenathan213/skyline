@@ -8,6 +8,7 @@ body {
 	background-color: #282828;
 	background-size: 16px 16px;
     font-family: Helvetica;
+    color: #404040;
 }
 
 a {
@@ -79,7 +80,7 @@ h1, h2 {
 
 #temperature-range,
 #precipitation-range {
-    min-height: 200px;
+    min-height: 180px;
 }
 
 #temperature-range:hover {
@@ -96,7 +97,7 @@ h1, h2 {
 }
 
 .noUi-base {
-    height: 200px;
+    height: 190px;
 }
 
 #map {
@@ -155,12 +156,13 @@ h1, h2 {
 .control-wrap {
     align-items: center;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
+    flex-direction: column;
 }
 
 @media only screen and (min-width : 480px) {
     .control-wrap {
-
+        height: 45%;
     }
 }
 
@@ -214,4 +216,12 @@ a.footer:hover {
 
 .gm-style-iw {
     color: #404040;
+}
+
+.temp-label {
+    text-transform: uppercase;
+    color: #404040;
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 0 5px;
 }

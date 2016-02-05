@@ -3,7 +3,9 @@
 var myFirebaseRef = new Firebase("https://skyline-maps.firebaseio.com/");
 var places_list_ref = new Firebase("https://skyline-maps.firebaseio.com/places");
 
+
 var places_list = {};
+
 
 places_list_ref.on("value", function(snapshot) {
   places_list = snapshot.val();
@@ -13,7 +15,17 @@ places_list_ref.on("value", function(snapshot) {
   console.log("The read failed: " + errorObject.code);
 });
 
-var WU_API_KEY = "8c6b1a4b7c885a22";
+
+// var WU_API_KEY = '';
+//
+// var config_ref = myFirebaseRef.child("config/WU_API_KEY");
+//
+// config_ref.on("value", function(snapshot) {
+//   WU_API_KEY = snapshot.val();
+//   renderCities();
+// }, function (errorObject) {
+//   console.log("The read failed: " + errorObject.code);
+// });
 
 var map = null;
 
@@ -244,7 +256,7 @@ function updateUICalls() {
     calls_number.innerHTML = upload_month;
 };
 
-updateUICalls();
+//updateUICalls();
 
 function addNewPlace() {
     var city_name = document.getElementById("place_name").value;

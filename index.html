@@ -36,9 +36,11 @@
         <div class="date-map-section">
             <div class="filters-section">
                 <div class="control-wrap temperature-wrap">
+                    <div class="temp-label">Temp</div>
                     <div type="range" id="temperature-range"></div>
                 </div>
                 <div class="control-wrap precipitation-wrap" id="precipitation-wrap-id">
+                    <div class="temp-label">Chance precip</div>
                     <div type="range" id="precipitation-range"></div>
                 </div>
             </div>
@@ -49,7 +51,7 @@
     </div>
     <div class="footer">Made with love by <a href="http://www.nathanrkane.com">Nathan Kane</a> in 2016. Weather data from <a href="http://www.wunderground.com/">Weather Underground</a></div>
     </div>
-    <div class="add-places-section" style="z-index: 5">
+    <!-- <div class="add-places-section" style="z-index: 5">
         <form>
             <input type="text" name="place_name" placeholder="Place name" id="place_name">
             <input type="text" name="latitude" placeholder="Latitude" id="latitude">
@@ -57,7 +59,7 @@
             <span id="calls-number"></span>
             <button type="button" onclick="startAdding()">Start</button
         </form>
-    </div>
+    </div> -->
     <script src="./nouislider.min.js"></script>
     <script src="https://cdn.firebase.com/js/client/2.4.0/firebase.js"></script>
     <script src="./wNumb.js"></script>
