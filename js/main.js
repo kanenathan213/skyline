@@ -3,9 +3,7 @@
 var myFirebaseRef = new Firebase("https://skyline-maps.firebaseio.com/");
 var places_list_ref = new Firebase("https://skyline-maps.firebaseio.com/places");
 
-var noUiSlider = require('./nouislider.min.js');
-
-require('./wNumb.js');
+var InitializeMap = require('./initialize_map.js');
 
 var places_list = {};
 
@@ -24,7 +22,6 @@ places_list_ref.on("value", function(snapshot) {
   console.log("The read failed: " + errorObject.code);
 });
 
-
 // var WU_API_KEY = '';
 //
 // var config_ref = myFirebaseRef.child("config/WU_API_KEY");
@@ -35,97 +32,6 @@ places_list_ref.on("value", function(snapshot) {
 // }, function (errorObject) {
 //   console.log("The read failed: " + errorObject.code);
 // });
-
-var map = null;
-
-var initMap = function() {
-
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 20, lng: 20},
-    scrollwheel: true,
-    zoom: 2,
-    minZoom: 2
-  });
-
- var connectSlider = document.getElementById('temperature-range');
-
- noUiSlider.create(connectSlider, {
- 	start: [weather_ranges.temperature.bottom, weather_ranges.temperature.top],
- 	connect: true,
-    tooltips: [true, true],
- 	range: {
- 		'min': 0,
- 		'max': 100
- 	},
-    margin: 10,
-    direction: 'rtl',
-    orientation: 'vertical',
-    format: wNumb({
-		decimals: 0,
-		postfix: '&#' + 8457,
-	})
- });
-
- var connectBar = document.createElement('div'),
-	connectBase = connectSlider.getElementsByClassName('noUi-base')[0],
-	connectHandles = connectSlider.getElementsByClassName('noUi-origin');
-
- connectSlider.noUiSlider.on('update', function( values, handle ) {
-
- 	var side = handle ? 'right' : 'left',
- 		offset = (connectHandles[handle].style.left).slice(0, - 1);
-
- 	if ( handle === 1 ) {
- 		offset = 100 - offset;
- 	}
-
- 	connectBar.style[side] = offset + '%';
-
-    weather_ranges.temperature.bottom = connectSlider.noUiSlider.get()[0].replace(/&#8457/g,'');
-    weather_ranges.temperature.top = connectSlider.noUiSlider.get()[1].replace(/&#8457/g,'');
-    renderCities();
- });
-
- var precipitationSlider = document.getElementById('precipitation-range');
-
- noUiSlider.create(precipitationSlider, {
- 	start: [weather_ranges.precipitation.bottom, weather_ranges.precipitation.top],
- 	connect: true,
-    margin: 10,
-    tooltips: [true, true],
- 	range: {
- 		'min': 0,
- 		'max': 100
- 	},
-    direction: 'rtl',
-    orientation: 'vertical',
-    format: wNumb({
-        decimals: 0,
-        postfix: '%',
-    })
- });
-
-
- var precipConnectBar = document.createElement('div'),
-	precipConnectBase = precipitationSlider.getElementsByClassName('noUi-base')[0],
-	precipConnectHandles = precipitationSlider.getElementsByClassName('noUi-origin');
-
- precipitationSlider.noUiSlider.on('update', function( values, handle ) {
-
- 	var side = handle ? 'right' : 'left',
- 		offset = (precipConnectHandles[handle].style.left).slice(0, - 1);
-
- 	if ( handle === 1 ) {
- 		offset = 100 - offset;
- 	}
-
- 	precipConnectBar.style[side] = offset + '%';
-
-    weather_ranges.precipitation.bottom = precipitationSlider.noUiSlider.get()[0].replace(/%/g, '');
-    weather_ranges.precipitation.top = precipitationSlider.noUiSlider.get()[1].replace(/%/g, '');
-    renderCities();
- });
-}
 
 function sortWeather(sortedPrecip, sortedTemp) {
 
@@ -431,4 +337,4 @@ function startAdding() {
     pull_interval = setInterval(function() { addNewPlace() }, 10000);
 }
 
-window.onload = initMap;
+window.onload = InitializeMap.initMap;
