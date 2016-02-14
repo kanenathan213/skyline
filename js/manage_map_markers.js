@@ -1,7 +1,7 @@
+var ManageMapMarkers = {};
+
 var BackendInterface = require('./backend_interface.js');
 var InitializeMap = require('./initialize_map.js');
-
-var ManageMapMarkers = {};
 
 var markers = [];
 
@@ -58,5 +58,7 @@ ManageMapMarkers.renderCities = function(cities) {
         setMapOnAll(InitializeMap.map);
     }
 }
+
+console.log(ManageMapMarkers);
 
 module.exports = ManageMapMarkers;

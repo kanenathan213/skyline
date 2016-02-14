@@ -33,9 +33,7 @@ OptimalTimeInterval.findBestMonths = function(city_data) {
     var weather_scores = [];
 
     for (var w = 0; w < 12; w++) {
-
         var weather_score_item = precip_array[w][0] / 100 + temp_array[w][0] / 100;
-
         weather_scores.push([weather_score_item, w]);
 
     }
@@ -60,12 +58,9 @@ function sortMonths(months_with_data) {
     var months = months_with_data;
 
     for (var j = 0; j < months_with_data.length; j++) {
-
         for (var k = 0; k < months.length; k++) {
-
             var temporary_month = months[k];
             if (months_with_data[j][0] < months[k][0]) {
-
                 months[k] = months_with_data[j];
                 months_with_data[j] = temporary_month;
                 break;

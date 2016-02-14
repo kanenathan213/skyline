@@ -13,6 +13,7 @@ places_list_ref.on("value", function(snapshot) {
   BackendInterface.places_list = snapshot.val();
   console.log("this one", BackendInterface.places_list);
   best_weather_months = OptimalTimeInterval.findBestMonths(BackendInterface.places_list["Bangkok"]);
+
   ManageMapMarkers.renderCities(BackendInterface.places_list);
 
 }, function (errorObject) {

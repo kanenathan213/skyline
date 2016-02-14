@@ -47,7 +47,8 @@
 	'use strict';
 
 	var InitializeMap = __webpack_require__(3);
-	var BackendInterface = __webpack_require__(4);
+	__webpack_require__(7);
+	__webpack_require__(4);
 
 	window.onload = InitializeMap.initMap;
 
@@ -94,6 +95,7 @@
 	  BackendInterface.places_list = snapshot.val();
 	  console.log("this one", BackendInterface.places_list);
 	  best_weather_months = OptimalTimeInterval.findBestMonths(BackendInterface.places_list["Bangkok"]);
+
 	  ManageMapMarkers.renderCities(BackendInterface.places_list);
 
 	}, function (errorObject) {
@@ -107,10 +109,10 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var ManageMapMarkers = {};
+
 	var BackendInterface = __webpack_require__(4);
 	var InitializeMap = __webpack_require__(3);
-
-	var ManageMapMarkers = {};
 
 	var markers = [];
 
@@ -168,6 +170,8 @@
 	    }
 	}
 
+	console.log(ManageMapMarkers);
+
 	module.exports = ManageMapMarkers;
 
 
@@ -210,9 +214,7 @@
 	    var weather_scores = [];
 
 	    for (var w = 0; w < 12; w++) {
-
 	        var weather_score_item = precip_array[w][0] / 100 + temp_array[w][0] / 100;
-
 	        weather_scores.push([weather_score_item, w]);
 
 	    }
@@ -237,12 +239,9 @@
 	    var months = months_with_data;
 
 	    for (var j = 0; j < months_with_data.length; j++) {
-
 	        for (var k = 0; k < months.length; k++) {
-
 	            var temporary_month = months[k];
 	            if (months_with_data[j][0] < months[k][0]) {
-
 	                months[k] = months_with_data[j];
 	                months_with_data[j] = temporary_month;
 	                break;
@@ -253,6 +252,51 @@
 	}
 
 	module.exports = OptimalTimeInterval;
+
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ControlsUI = {};
+
+	var BackendInterface = __webpack_require__(4);
+	var ManageMapMarkers = __webpack_require__(5);
+
+	var selected_month = new Date().getMonth() + 1;
+	var month_wrap = document.getElementById("month-wrap-id");
+
+	initializeSelectedMonth();
+
+	month_wrap.onclick = function(event) {
+	    var element = event.target;
+	    removeSelectedClass(element.parentNode);
+	    element.className += " selected";
+	    selected_month = element.value;
+	    ManageMapMarkers.renderCities(BackendInterface.places_list);
+	}
+
+	function initializeSelectedMonth() {
+
+	    if (selected_month === 11) {
+	        selected_month = 0;
+	    }
+
+	    for (var i = 0; i < month_wrap.children.length; i++) {
+	        if (i === selected_month) {
+	            month_wrap.children[i].className += " selected";
+	            break;
+	        }
+	    }
+	}
+
+	function removeSelectedClass(element) {
+	    for (var i = 0; i < element.children.length; i++) {
+	        element.children[i].className = "month-button";
+	    }
+	}
+
+	module.exports = ControlsUI;
 
 
 /***/ }

@@ -1,11 +1,22 @@
 var ControlsUI = {};
 
+var BackendInterface = require('./backend_interface.js');
+var ManageMapMarkers = require('./manage_map_markers.js');
+
 var selected_month = new Date().getMonth() + 1;
+var month_wrap = document.getElementById("month-wrap-id");
 
 initializeSelectedMonth();
 
+month_wrap.onclick = function(event) {
+    var element = event.target;
+    removeSelectedClass(element.parentNode);
+    element.className += " selected";
+    selected_month = element.value;
+    ManageMapMarkers.renderCities(BackendInterface.places_list);
+}
+
 function initializeSelectedMonth() {
-    var month_wrap = document.getElementById("month-wrap-id");
 
     if (selected_month === 11) {
         selected_month = 0;
@@ -17,15 +28,6 @@ function initializeSelectedMonth() {
             break;
         }
     }
-}
-
-function addSelectedClass(event) {
-
-    var element = event.target;
-    removeSelectedClass(element.parentNode);
-    element.className += " selected";
-    selected_month = element.value;
-    renderCities();
 }
 
 function removeSelectedClass(element) {
