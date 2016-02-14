@@ -264,3 +264,21 @@ a.footer:hover {
     font-size: 2rem;
     text-shadow: 1px 1px 1px black;
 }
+
+.loader {
+  max-height: 200px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#loader-1 {
+    width: 80px;
+    height: 80px;
+}
+
+svg path,
+svg rect{
+  fill: hotpink;
+}
