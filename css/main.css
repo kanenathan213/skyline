@@ -48,8 +48,8 @@ h1, h2 {
 }
 
 .tagline {
-    font-size: 3.5rem;
-    line-height: 3.7rem;
+    font-size: 2.5rem;
+    line-height: 2.7rem;
     text-shadow: -2px 2px 0 rgba(255, 105, 180, 0.7);
     font-family: 'Playfair Display', serif;
 }
@@ -127,6 +127,7 @@ h1, h2 {
 @media only screen and (min-width : 480px) {
     #map {
         border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 10px;
         width: 100%;
         margin: 0;
     }
