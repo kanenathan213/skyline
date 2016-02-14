@@ -84,7 +84,6 @@
 	var BackendInterface = {};
 
 	var ManageMapMarkers = __webpack_require__(5);
-	var OptimalTimeInterval = __webpack_require__(6);
 
 	var places_list_ref = new Firebase("https://skyline-maps.firebaseio.com/places");
 
@@ -95,9 +94,6 @@
 
 	places_list_ref.on("value", function(snapshot) {
 	  BackendInterface.places_list = snapshot.val();
-	  console.log("this one", BackendInterface.places_list);
-	  best_weather_months = OptimalTimeInterval.findBestMonths(BackendInterface.places_list["Bangkok"]);
-
 	  ManageMapMarkers.renderCities(BackendInterface.places_list);
 
 	}, function (errorObject) {
@@ -115,7 +111,10 @@
 
 	var BackendInterface = __webpack_require__(4);
 	var InitializeMap = __webpack_require__(3);
+	var OptimalTimeInterval = __webpack_require__(6);
+	var CurrentMonth = __webpack_require__(9);
 
+	var best_weather_months;
 	var markers = [];
 
 	function prepMarkers(lat, lng, name) {
@@ -131,7 +130,7 @@
 	      var marker = new google.maps.Marker({
 	        position: latLng,
 	        map: InitializeMap.map,
-	        title: 'thing'
+	        title: name
 	      })
 
 	      marker.addListener('click', function() {
@@ -160,16 +159,18 @@
 	}
 
 	ManageMapMarkers.renderCities = function(cities) {
-
 	    deleteMarkers();
 	    var latitude, longitude;
 	    for (var key in cities) {
-
+	        best_weather_months = OptimalTimeInterval.findBestMonths(cities[key]);
 	        latitude = cities[key][0].latitude;
 	        longitude = cities[key][0].longitude;
-	        prepMarkers(latitude, longitude, key);
-	        setMapOnAll(InitializeMap.map);
+	        var selected_month = CurrentMonth.getSelectedMonth();
+	        if (best_weather_months.indexOf(selected_month) !== -1) {
+	            prepMarkers(latitude, longitude, key);
+	        }
 	    }
+	    setMapOnAll(InitializeMap.map);
 	}
 
 	module.exports = ManageMapMarkers;
@@ -187,8 +188,8 @@
 
 	OptimalTimeInterval.findBestMonths = function(city_data) {
 
-	    var precip_array = [];
-	    var temp_array = [];
+	    var weather_scores = [];
+	    var ideal_months = [];
 
 	    for (var i = 0; i < city_data.length; i++) {
 
@@ -199,56 +200,25 @@
 	        var raw_low_temp_avg = city_data[i].temp_low.avg['C'];
 
 	        var formatted_avg_temp = (Number(raw_high_temp_avg) + Number(raw_low_temp_avg))/2;
-
 	        var difference_from_ideal_temp = Math.abs(ideal_temp - formatted_avg_temp);
 
-	        precip_array.push([formatted_precip_percentage, i]);
-	        temp_array.push([difference_from_ideal_temp, i]);
+	        var weather_score_item = 0.3 * (formatted_precip_percentage / 100) + 0.7 * (difference_from_ideal_temp / 25);
+
+	        weather_scores.push({
+	            "score": weather_score_item,
+	            "month": i
+	        });
 	    }
 
-	    var precip_months = sortMonths(precip_array);
-	    var temperature_months = sortMonths(temp_array);
-
-	    console.log(precip_months, temperature_months);
-
-	    var weather_scores = [];
-
-	    for (var w = 0; w < 12; w++) {
-	        var weather_score_item = precip_array[w][0] / 100 + temp_array[w][0] / 100;
-	        weather_scores.push([weather_score_item, w]);
-
-	    }
-
-	    weather_scores = sortMonths(weather_scores);
-
-	    console.log(weather_scores);
-
-	    var weather_score_indices = [];
+	    weather_scores.sort(
+	        function(a, b) {
+	            return a.score - b.score
+	    });
 
 	    for (var i = 0; i < number_of_ideal_months; i++ ) {
-
-	        weather_score_indices.push(weather_scores[i][1]);
-
+	        ideal_months.push(weather_scores[i].month);
 	    }
-
-	    return weather_score_indices;
-	}
-
-	function sortMonths(months_with_data) {
-
-	    var months = months_with_data;
-
-	    for (var j = 0; j < months_with_data.length; j++) {
-	        for (var k = 0; k < months.length; k++) {
-	            var temporary_month = months[k];
-	            if (months_with_data[j][0] < months[k][0]) {
-	                months[k] = months_with_data[j];
-	                months_with_data[j] = temporary_month;
-	                break;
-	            }
-	        }
-	    }
-	    return months;
+	    return ideal_months;
 	}
 
 	module.exports = OptimalTimeInterval;
@@ -262,26 +232,28 @@
 
 	var BackendInterface = __webpack_require__(4);
 	var ManageMapMarkers = __webpack_require__(5);
+	var CurrentMonth = __webpack_require__(9);
 
-	ControlsUI.selected_month = new Date().getMonth() + 1;
+	var selected_month = CurrentMonth.selected_month;
+
 	var month_wrap = document.getElementById("month-wrap-id");
 
 	month_wrap.onclick = function(event) {
 	    var element = event.target;
 	    ControlsUI.removeSelectedClass(element.parentNode);
 	    element.className += " selected";
-	    this.selected_month = element.value;
+	    CurrentMonth.setSelectedMonth(Number(element.value));
 	    ManageMapMarkers.renderCities(BackendInterface.places_list);
 	}
 
 	ControlsUI.initializeSelectedMonth = function() {
 
-	    if (this.selected_month === 11) {
-	        this.selected_month = 0;
+	    if (selected_month === 11) {
+	        CurrentMonth.setSelectedMonth(0);
 	    }
 
 	    for (var i = 0; i < month_wrap.children.length; i++) {
-	        if (i === this.selected_month) {
+	        if (i === selected_month) {
 	            month_wrap.children[i].className += " selected";
 	            break;
 	        }
@@ -401,6 +373,25 @@
 	}
 
 	module.exports = WeatherDataImport;
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	var CurrentMonth = {};
+
+	CurrentMonth.selected_month = new Date().getMonth() + 1;
+
+	CurrentMonth.getSelectedMonth = function() {
+	    return CurrentMonth.selected_month;
+	}
+
+	CurrentMonth.setSelectedMonth = function(new_month) {
+	    CurrentMonth.selected_month = new_month;
+	}
+
+	module.exports = CurrentMonth;
 
 
 /***/ }

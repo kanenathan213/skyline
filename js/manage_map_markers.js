@@ -2,7 +2,10 @@ var ManageMapMarkers = {};
 
 var BackendInterface = require('./backend_interface.js');
 var InitializeMap = require('./initialize_map.js');
+var OptimalTimeInterval = require('./optimal_time_interval.js');
+var CurrentMonth = require('./current_month.js');
 
+var best_weather_months;
 var markers = [];
 
 function prepMarkers(lat, lng, name) {
@@ -18,7 +21,7 @@ function prepMarkers(lat, lng, name) {
       var marker = new google.maps.Marker({
         position: latLng,
         map: InitializeMap.map,
-        title: 'thing'
+        title: name
       })
 
       marker.addListener('click', function() {
@@ -47,16 +50,18 @@ function deleteMarkers() {
 }
 
 ManageMapMarkers.renderCities = function(cities) {
-
     deleteMarkers();
     var latitude, longitude;
     for (var key in cities) {
-
+        best_weather_months = OptimalTimeInterval.findBestMonths(cities[key]);
         latitude = cities[key][0].latitude;
         longitude = cities[key][0].longitude;
-        prepMarkers(latitude, longitude, key);
-        setMapOnAll(InitializeMap.map);
+        var selected_month = CurrentMonth.getSelectedMonth();
+        if (best_weather_months.indexOf(selected_month) !== -1) {
+            prepMarkers(latitude, longitude, key);
+        }
     }
+    setMapOnAll(InitializeMap.map);
 }
 
 module.exports = ManageMapMarkers;
