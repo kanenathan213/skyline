@@ -1,12 +1,10 @@
-
-
 var InitializeMap = {};
 
-var map = null;
+InitializeMap.map = null;
 
 InitializeMap.initMap = function() {
 
-  map = new google.maps.Map(document.getElementById('map'), {
+  InitializeMap.map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 20, lng: 20},
     scrollwheel: true,
     zoom: 2,
