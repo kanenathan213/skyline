@@ -1,12 +1,14 @@
 var WeatherDataImport = {};
 
+var BackendInterface = require('./backend_interface.js');
+
 var WU_API_KEY = '';
-
-var config_ref = myFirebaseRef.child("config/WU_API_KEY");
-
+var config_ref = BackendInterface.myFirebaseRef.child("config/WU_API_KEY");
 var upload_month = 0;
-
 var calls_number = document.getElementById("calls-number");
+var pull_interval;
+
+var start_adding_button = document.getElementById('start-adding-button');
 
 function updateUICalls() {
     calls_number.innerHTML = upload_month;
@@ -14,12 +16,9 @@ function updateUICalls() {
 
 config_ref.on("value", function(snapshot) {
   WU_API_KEY = snapshot.val();
-  //renderCities();
 }, function (errorObject) {
   console.log("The read failed: " + errorObject.code);
 });
-
-var pull_interval;
 
 // Private stuff
 function formatMonthForRequest(month) {
@@ -39,19 +38,16 @@ function formatMonthForRequest(month) {
     return cleanedUpMonth;
 }
 
-// Public interface
-WeatherDataImport.startAdding = function() {
+start_adding_button.onclick = function() {
     pull_interval = setInterval(function() { addNewPlace() }, 10000);
 }
 
-//updateUICalls();
-
-WeatherDataImport.addNewPlace = function() {
+function addNewPlace() {
     var city_name = document.getElementById("place_name").value;
     var longitude = document.getElementById("longitude").value;
     var latitude = document.getElementById("latitude").value;
 
-    var places_ref = myFirebaseRef.child("places/" + city_name + "/" + upload_month);
+    var places_ref = BackendInterface.myFirebaseRef.child("places/" + city_name + "/" + upload_month);
 
     var firebase_payload = {};
 
@@ -69,11 +65,9 @@ WeatherDataImport.addNewPlace = function() {
           }
         };
 
-        var request_month = formatMonthForRequest(selected_month);
         var formatted_upload_month = formatMonthForRequest(upload_month);
 
         var filter_date = {
-            month: request_month,
             start_day: '01',
             end_day: '28'
         }
@@ -92,8 +86,6 @@ WeatherDataImport.addNewPlace = function() {
                          + ".json";
         xhttp.open("GET", endpoint, true);
         xhttp.send();
-
-        console.log(endpoint);
 
         if (upload_month === 11) {
             clearInterval(pull_interval);

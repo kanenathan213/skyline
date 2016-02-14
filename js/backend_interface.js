@@ -3,8 +3,9 @@ var BackendInterface = {};
 var ManageMapMarkers = require('./manage_map_markers.js');
 var OptimalTimeInterval = require('./optimal_time_interval.js');
 
-var myFirebaseRef = new Firebase("https://skyline-maps.firebaseio.com/");
 var places_list_ref = new Firebase("https://skyline-maps.firebaseio.com/places");
+
+BackendInterface.myFirebaseRef = new Firebase("https://skyline-maps.firebaseio.com/");
 
 BackendInterface.places_list = {};
 var best_weather_months = [];

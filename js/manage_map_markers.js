@@ -59,6 +59,4 @@ ManageMapMarkers.renderCities = function(cities) {
     }
 }
 
-console.log(ManageMapMarkers);
-
 module.exports = ManageMapMarkers;
