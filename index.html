@@ -3,9 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Skyline: When to go where</title>
-  <link rel="stylesheet" href="./css/nouislider.min.css">
-  <link rel="stylesheet" href="./css/nouislider.tooltips.css">
-  <link rel="stylesheet" href="./css/weather-icons.min.css">
   <link href='https://fonts.googleapis.com/css?family=Playfair+Display:700italic|Martel+Sans:200' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="./css/main.css">
 </head>
@@ -39,6 +36,9 @@
                 </div>
                 <div class="maps-section">
                     <div id="map"></div>
+                    <div class="loading-overlay" id="loading-overlay-element">
+                        <div class="loading-text">Loading places...</div>
+                    </div>
                 </div>
             </div>
         </div>

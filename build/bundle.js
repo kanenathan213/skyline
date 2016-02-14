@@ -92,8 +92,11 @@
 	BackendInterface.places_list = {};
 	var best_weather_months = [];
 
+	var loading_overlay = document.getElementById('loading-overlay-element');
+
 	places_list_ref.on("value", function(snapshot) {
 	  BackendInterface.places_list = snapshot.val();
+	  loading_overlay.style.visibility = "hidden";
 	  ManageMapMarkers.renderCities(BackendInterface.places_list);
 
 	}, function (errorObject) {
