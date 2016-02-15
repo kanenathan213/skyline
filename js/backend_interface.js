@@ -2,7 +2,7 @@ var BackendInterface = {};
 
 var ManageMapMarkers = require('./manage_map_markers.js');
 
-var places_list_ref = new Firebase("https://skyline-maps.firebaseio.com/places/tokyo/1");
+var places_list_ref = new Firebase("https://skyline-maps.firebaseio.com/places");
 
 BackendInterface.myFirebaseRef = new Firebase("https://skyline-maps.firebaseio.com/");
 
@@ -11,7 +11,6 @@ var best_weather_months = [];
 
 var handlePlacesDataSuccess = function(snapshot) {
   BackendInterface.places_list = snapshot.val();
-  console.log(BackendInterface.places_list);
   ManageMapMarkers.renderCities(BackendInterface.places_list);
 }
 

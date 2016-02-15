@@ -7,14 +7,15 @@ var CurrentMonth = require('./current_month.js');
 
 var best_weather_months;
 var markers = [];
+var infoWindow = new google.maps.InfoWindow();
+
+var monthAbbreviations = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
 
 var loading_overlay = document.getElementById('loading-overlay-element');
 
-function prepMarkers(lat, lng, name) {
-
-      var infowindow = new google.maps.InfoWindow({
-          content: name
-      });
+function prepMarkers(lat, lng, name, high_temp, low_temp, precip_chance, best_months) {
 
       var latLng = {
           "lat": Number(lat),
@@ -26,8 +27,34 @@ function prepMarkers(lat, lng, name) {
         title: name
       })
 
+      InitializeMap.map.addListener('click', function(){
+          infoWindow.close();
+      })
+
       marker.addListener('click', function() {
-        infowindow.open(InitializeMap.map, marker);
+        infoWindow.close();
+        var best_months_names = '';
+        best_months.sort(function(a, b) {
+            return a - b;
+        })
+        for (var i = 0; i < best_months.length; i++) {
+            best_months_names += monthAbbreviations[best_months[i]] + '';
+            if (i !== best_months.length - 1) {
+                best_months_names += ', '
+            }
+        }
+        infoWindow.setContent('<div>' +
+                                    '<h2>' + name +
+                                    '</h2>' +
+                                    '<div> Low: ' + low_temp +
+                                    '&#8451;</div>' +
+                                    '<div> High: ' + high_temp +
+                                    '&#8451;</div>' +
+                                    '<div>Precip: ' + precip_chance +
+                                    '%</div>' +
+                                    '<div> Best months: ' + best_months_names +
+                                '</div>');
+        infoWindow.open(InitializeMap.map, marker);
       });
 
       markers.push(marker);
@@ -61,7 +88,7 @@ ManageMapMarkers.renderCities = function(cities) {
         longitude = cities[key][0].longitude;
         var selected_month = CurrentMonth.getSelectedMonth();
         if (best_weather_months.indexOf(selected_month) !== -1) {
-            prepMarkers(latitude, longitude, key);
+            prepMarkers(latitude, longitude, key, cities[key][selected_month].temp_high.avg['C'], cities[key][selected_month].temp_low.avg['C'], cities[key][selected_month].chance_of.chanceofprecip.percentage, best_weather_months);
         }
     }
     setMapOnAll(InitializeMap.map);
