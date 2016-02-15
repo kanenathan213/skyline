@@ -56,7 +56,6 @@ function addNewPlace() {
         xhttp.onreadystatechange = function() {
           if (xhttp.readyState == 4 && xhttp.status == 200) {
               var json_response = JSON.parse(xhttp.response);
-              console.log(json_response);
               firebase_payload = json_response.trip;
 
               firebase_payload.latitude = latitude;
