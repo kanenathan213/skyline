@@ -6,16 +6,6 @@ var CurrentMonth = require('./current_month.js');
 
 var selected_month = CurrentMonth.selected_month;
 
-var month_wrap = document.getElementById("month-wrap-id");
-
-month_wrap.onclick = function(event) {
-    var element = event.target;
-    ControlsUI.removeSelectedClass(element.parentNode);
-    element.className += " selected";
-    CurrentMonth.setSelectedMonth(Number(element.value));
-    ManageMapMarkers.renderCities(BackendInterface.places_list);
-}
-
 ControlsUI.initializeSelectedMonth = function() {
 
     if (selected_month === 11) {
@@ -36,6 +26,13 @@ ControlsUI.removeSelectedClass = function(element) {
     }
 }
 
-ControlsUI.initializeSelectedMonth();
+var month_wrap = document.getElementById("month-wrap-id");
+month_wrap.onclick = function(event) {
+    var element = event.target;
+    ControlsUI.removeSelectedClass(element.parentNode);
+    element.className += " selected";
+    CurrentMonth.setSelectedMonth(Number(element.value));
+    ManageMapMarkers.renderCities(BackendInterface.places_list);
+}
 
 module.exports = ControlsUI;

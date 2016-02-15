@@ -2,44 +2,20 @@ var WeatherDataImport = {};
 
 var BackendInterface = require('./backend_interface.js');
 
-var WU_API_KEY = '';
-var config_ref = BackendInterface.myFirebaseRef.child("config/WU_API_KEY");
 var upload_month = 0;
 var calls_number = document.getElementById("calls-number");
+
 var pull_interval;
 
-var start_adding_button = document.getElementById('start-adding-button');
+var WU_API_KEY = '';
 
-function updateUICalls() {
-    calls_number.innerHTML = upload_month;
-};
-
-config_ref.on("value", function(snapshot) {
-  WU_API_KEY = snapshot.val();
-}, function (errorObject) {
-  console.log("The read failed: " + errorObject.code);
-});
-
-// Private stuff
-function formatMonthForRequest(month) {
-
-    var monthAsNumber = Number(month);
-    monthAsNumber += 1;
-
-    var cleanedUpMonth = '';
-
-    var monthAsString = monthAsNumber.toString();
-    if (monthAsString.length === 1) {
-        cleanedUpMonth = '0'.concat(monthAsString);
+WeatherDataImport.initializeImport = function() {
+    var start_adding_button = document.getElementById('start-adding-button');
+    start_adding_button.onclick = function() {
+        pull_interval = setInterval(function() { addNewPlace() }, 10000);
     }
-    else {
-        cleanedUpMonth = monthAsString;
-    }
-    return cleanedUpMonth;
-}
 
-start_adding_button.onclick = function() {
-    pull_interval = setInterval(function() { addNewPlace() }, 10000);
+    getKey();
 }
 
 function addNewPlace() {
@@ -52,12 +28,13 @@ function addNewPlace() {
     var firebase_payload = {};
 
     var xhttp = new XMLHttpRequest();
-
         xhttp.onreadystatechange = function() {
           if (xhttp.readyState == 4 && xhttp.status == 200) {
               var json_response = JSON.parse(xhttp.response);
-              firebase_payload = json_response.trip;
 
+              console.log(json_response);
+
+              firebase_payload = json_response.trip;
               firebase_payload.latitude = latitude;
               firebase_payload.longitude = longitude;
 
@@ -66,7 +43,6 @@ function addNewPlace() {
         };
 
         var formatted_upload_month = formatMonthForRequest(upload_month);
-
         var filter_date = {
             start_day: '01',
             end_day: '28'
@@ -90,9 +66,36 @@ function addNewPlace() {
         if (upload_month === 11) {
             clearInterval(pull_interval);
         }
-
         ++upload_month;
         updateUICalls();
+}
+
+function getKey() {
+    var config_ref = BackendInterface.myFirebaseRef.child("config/WU_API_KEY");
+    config_ref.on("value", function(snapshot) {
+    WU_API_KEY = snapshot.val();
+    }, function (errorObject) {
+      console.log("The read failed: " + errorObject.code);
+    });
+}
+
+function updateUICalls() {
+    calls_number.innerHTML = upload_month;
+};
+
+function formatMonthForRequest(month) {
+    var monthAsNumber = Number(month);
+    var cleanedUpMonth = '';
+    monthAsNumber += 1;
+
+    var monthAsString = monthAsNumber.toString();
+    if (monthAsString.length === 1) {
+        cleanedUpMonth = '0'.concat(monthAsString);
+    }
+    else {
+        cleanedUpMonth = monthAsString;
+    }
+    return cleanedUpMonth;
 }
 
 module.exports = WeatherDataImport;

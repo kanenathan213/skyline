@@ -28,15 +28,19 @@ OptimalTimeInterval.findBestMonths = function(city_data) {
         });
     }
 
-    weather_scores.sort(
-        function(a, b) {
-            return a.score - b.score
-    });
+    sortWeather(weather_scores);
 
     for (var i = 0; i < number_of_ideal_months; i++ ) {
         ideal_months.push(weather_scores[i].month);
     }
     return ideal_months;
+}
+
+function sortWeather(weather_scores) {
+    weather_scores.sort(
+        function(a, b) {
+            return a.score - b.score
+    });
 }
 
 module.exports = OptimalTimeInterval;

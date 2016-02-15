@@ -47,11 +47,16 @@
 	'use strict';
 
 	var InitializeMap = __webpack_require__(3);
-	__webpack_require__(7);
-	__webpack_require__(4);
-	__webpack_require__(8);
+	var ControlsUI = __webpack_require__(7);
+	var BackendInterface = __webpack_require__(4);
+	var WeatherDataImport = __webpack_require__(8);
 
-	window.onload = InitializeMap.initMap;
+	window.onload = function() {
+	    InitializeMap.initMap();
+	    BackendInterface.getPlaces();
+	    ControlsUI.initializeSelectedMonth();
+	    WeatherDataImport.initializeImport();
+	}
 
 
 /***/ },
@@ -86,22 +91,20 @@
 	var ManageMapMarkers = __webpack_require__(5);
 
 	var places_list_ref = new Firebase("https://skyline-maps.firebaseio.com/places");
-
 	BackendInterface.myFirebaseRef = new Firebase("https://skyline-maps.firebaseio.com/");
 
-	BackendInterface.places_list = {};
-	var best_weather_months = [];
+	BackendInterface.getPlaces = function() {
+	    places_list_ref.once("value", handlePlacesDataSuccess, handlePlacesDataFail);
+	}
 
-	var handlePlacesDataSuccess = function(snapshot) {
+	function handlePlacesDataSuccess(snapshot) {
 	  BackendInterface.places_list = snapshot.val();
 	  ManageMapMarkers.renderCities(BackendInterface.places_list);
 	}
 
-	var handlePlacesDataFail = function (errorObject) {
+	function handlePlacesDataFail(errorObject) {
 	  console.log("The read failed: " + errorObject.code);
 	}
-
-	places_list_ref.once("value", handlePlacesDataSuccess, handlePlacesDataFail);
 
 	module.exports = BackendInterface;
 
@@ -126,6 +129,21 @@
 	    ];
 
 	var loading_overlay = document.getElementById('loading-overlay-element');
+
+	ManageMapMarkers.renderCities = function(cities) {
+	    deleteMarkers();
+	    var latitude, longitude;
+	    for (var key in cities) {
+	        best_weather_months = OptimalTimeInterval.findBestMonths(cities[key]);
+	        latitude = cities[key][0].latitude;
+	        longitude = cities[key][0].longitude;
+	        var selected_month = CurrentMonth.getSelectedMonth();
+	        if (best_weather_months.indexOf(selected_month) !== -1) {
+	            prepMarkers(latitude, longitude, key, cities[key][selected_month].temp_high.avg['C'], cities[key][selected_month].temp_low.avg['C'], cities[key][selected_month].chance_of.chanceofprecip.percentage, best_weather_months);
+	        }
+	    }
+	    setMapOnAll(InitializeMap.map);
+	}
 
 	function prepMarkers(lat, lng, name, high_temp, low_temp, precip_chance, best_months) {
 
@@ -172,38 +190,20 @@
 	      markers.push(marker);
 	}
 
-	// Sets the map on all markers in the array.
-	function setMapOnAll(map) {
-	  for (var i = 0; i < markers.length; i++) {
-	    markers[i].setMap(map);
-	  }
-	  loading_overlay.style.visibility = "hidden";
-	}
-
-	// Removes the markers from the map, but keeps them in the array.
-	function clearMarkers() {
-	  setMapOnAll(null);
-	}
-
-	// Deletes all markers in the array by removing references to them.
 	function deleteMarkers() {
 	  clearMarkers();
 	  markers = [];
 	}
 
-	ManageMapMarkers.renderCities = function(cities) {
-	    deleteMarkers();
-	    var latitude, longitude;
-	    for (var key in cities) {
-	        best_weather_months = OptimalTimeInterval.findBestMonths(cities[key]);
-	        latitude = cities[key][0].latitude;
-	        longitude = cities[key][0].longitude;
-	        var selected_month = CurrentMonth.getSelectedMonth();
-	        if (best_weather_months.indexOf(selected_month) !== -1) {
-	            prepMarkers(latitude, longitude, key, cities[key][selected_month].temp_high.avg['C'], cities[key][selected_month].temp_low.avg['C'], cities[key][selected_month].chance_of.chanceofprecip.percentage, best_weather_months);
-	        }
-	    }
-	    setMapOnAll(InitializeMap.map);
+	function clearMarkers() {
+	  setMapOnAll(null);
+	}
+
+	function setMapOnAll(map) {
+	  for (var i = 0; i < markers.length; i++) {
+	    markers[i].setMap(map);
+	  }
+	  loading_overlay.style.visibility = "hidden";
 	}
 
 	module.exports = ManageMapMarkers;
@@ -243,15 +243,19 @@
 	        });
 	    }
 
-	    weather_scores.sort(
-	        function(a, b) {
-	            return a.score - b.score
-	    });
+	    sortWeather(weather_scores);
 
 	    for (var i = 0; i < number_of_ideal_months; i++ ) {
 	        ideal_months.push(weather_scores[i].month);
 	    }
 	    return ideal_months;
+	}
+
+	function sortWeather(weather_scores) {
+	    weather_scores.sort(
+	        function(a, b) {
+	            return a.score - b.score
+	    });
 	}
 
 	module.exports = OptimalTimeInterval;
@@ -268,16 +272,6 @@
 	var CurrentMonth = __webpack_require__(9);
 
 	var selected_month = CurrentMonth.selected_month;
-
-	var month_wrap = document.getElementById("month-wrap-id");
-
-	month_wrap.onclick = function(event) {
-	    var element = event.target;
-	    ControlsUI.removeSelectedClass(element.parentNode);
-	    element.className += " selected";
-	    CurrentMonth.setSelectedMonth(Number(element.value));
-	    ManageMapMarkers.renderCities(BackendInterface.places_list);
-	}
 
 	ControlsUI.initializeSelectedMonth = function() {
 
@@ -299,7 +293,14 @@
 	    }
 	}
 
-	ControlsUI.initializeSelectedMonth();
+	var month_wrap = document.getElementById("month-wrap-id");
+	month_wrap.onclick = function(event) {
+	    var element = event.target;
+	    ControlsUI.removeSelectedClass(element.parentNode);
+	    element.className += " selected";
+	    CurrentMonth.setSelectedMonth(Number(element.value));
+	    ManageMapMarkers.renderCities(BackendInterface.places_list);
+	}
 
 	module.exports = ControlsUI;
 
@@ -312,44 +313,20 @@
 
 	var BackendInterface = __webpack_require__(4);
 
-	var WU_API_KEY = '';
-	var config_ref = BackendInterface.myFirebaseRef.child("config/WU_API_KEY");
 	var upload_month = 0;
 	var calls_number = document.getElementById("calls-number");
+
 	var pull_interval;
 
-	var start_adding_button = document.getElementById('start-adding-button');
+	var WU_API_KEY = '';
 
-	function updateUICalls() {
-	    calls_number.innerHTML = upload_month;
-	};
-
-	config_ref.on("value", function(snapshot) {
-	  WU_API_KEY = snapshot.val();
-	}, function (errorObject) {
-	  console.log("The read failed: " + errorObject.code);
-	});
-
-	// Private stuff
-	function formatMonthForRequest(month) {
-
-	    var monthAsNumber = Number(month);
-	    monthAsNumber += 1;
-
-	    var cleanedUpMonth = '';
-
-	    var monthAsString = monthAsNumber.toString();
-	    if (monthAsString.length === 1) {
-	        cleanedUpMonth = '0'.concat(monthAsString);
+	WeatherDataImport.initializeImport = function() {
+	    var start_adding_button = document.getElementById('start-adding-button');
+	    start_adding_button.onclick = function() {
+	        pull_interval = setInterval(function() { addNewPlace() }, 10000);
 	    }
-	    else {
-	        cleanedUpMonth = monthAsString;
-	    }
-	    return cleanedUpMonth;
-	}
 
-	start_adding_button.onclick = function() {
-	    pull_interval = setInterval(function() { addNewPlace() }, 10000);
+	    getKey();
 	}
 
 	function addNewPlace() {
@@ -362,12 +339,13 @@
 	    var firebase_payload = {};
 
 	    var xhttp = new XMLHttpRequest();
-
 	        xhttp.onreadystatechange = function() {
 	          if (xhttp.readyState == 4 && xhttp.status == 200) {
 	              var json_response = JSON.parse(xhttp.response);
-	              firebase_payload = json_response.trip;
 
+	              console.log(json_response);
+
+	              firebase_payload = json_response.trip;
 	              firebase_payload.latitude = latitude;
 	              firebase_payload.longitude = longitude;
 
@@ -376,7 +354,6 @@
 	        };
 
 	        var formatted_upload_month = formatMonthForRequest(upload_month);
-
 	        var filter_date = {
 	            start_day: '01',
 	            end_day: '28'
@@ -400,9 +377,36 @@
 	        if (upload_month === 11) {
 	            clearInterval(pull_interval);
 	        }
-
 	        ++upload_month;
 	        updateUICalls();
+	}
+
+	function getKey() {
+	    var config_ref = BackendInterface.myFirebaseRef.child("config/WU_API_KEY");
+	    config_ref.on("value", function(snapshot) {
+	    WU_API_KEY = snapshot.val();
+	    }, function (errorObject) {
+	      console.log("The read failed: " + errorObject.code);
+	    });
+	}
+
+	function updateUICalls() {
+	    calls_number.innerHTML = upload_month;
+	};
+
+	function formatMonthForRequest(month) {
+	    var monthAsNumber = Number(month);
+	    var cleanedUpMonth = '';
+	    monthAsNumber += 1;
+
+	    var monthAsString = monthAsNumber.toString();
+	    if (monthAsString.length === 1) {
+	        cleanedUpMonth = '0'.concat(monthAsString);
+	    }
+	    else {
+	        cleanedUpMonth = monthAsString;
+	    }
+	    return cleanedUpMonth;
 	}
 
 	module.exports = WeatherDataImport;
