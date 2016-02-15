@@ -8,6 +8,8 @@ var CurrentMonth = require('./current_month.js');
 var best_weather_months;
 var markers = [];
 
+var loading_overlay = document.getElementById('loading-overlay-element');
+
 function prepMarkers(lat, lng, name) {
 
       var infowindow = new google.maps.InfoWindow({
@@ -36,6 +38,7 @@ function setMapOnAll(map) {
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(map);
   }
+  loading_overlay.style.visibility = "hidden";
 }
 
 // Removes the markers from the map, but keeps them in the array.

@@ -261,8 +261,10 @@ a.footer:hover {
 }
 
 .loading-text {
-    font-size: 2rem;
-    text-shadow: 1px 1px 1px black;
+    font-size: 1.3rem;
+    font-weight: lighter;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+    margin-top: 20px;
 }
 
 .loader {
@@ -274,6 +276,8 @@ a.footer:hover {
 }
 
 #loader-1 {
+    animation: rotating 0.8s infinite;
+    animation-timing-function: linear;
     width: 80px;
     height: 80px;
 }
@@ -281,4 +285,9 @@ a.footer:hover {
 svg path,
 svg rect{
   fill: hotpink;
+}
+
+@keyframes rotating {
+    from { transform: rotate(0deg);}
+    to { transform: rotate(360deg);}
 }

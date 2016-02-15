@@ -92,16 +92,17 @@
 	BackendInterface.places_list = {};
 	var best_weather_months = [];
 
-	var loading_overlay = document.getElementById('loading-overlay-element');
-
-	places_list_ref.on("value", function(snapshot) {
+	var handlePlacesDataSuccess = function(snapshot) {
 	  BackendInterface.places_list = snapshot.val();
-	  loading_overlay.style.visibility = "hidden";
+	  console.log(BackendInterface.places_list);
 	  ManageMapMarkers.renderCities(BackendInterface.places_list);
+	}
 
-	}, function (errorObject) {
+	var handlePlacesDataFail = function (errorObject) {
 	  console.log("The read failed: " + errorObject.code);
-	});
+	}
+
+	places_list_ref.once("value", handlePlacesDataSuccess, handlePlacesDataFail);
 
 	module.exports = BackendInterface;
 
@@ -119,6 +120,8 @@
 
 	var best_weather_months;
 	var markers = [];
+
+	var loading_overlay = document.getElementById('loading-overlay-element');
 
 	function prepMarkers(lat, lng, name) {
 
@@ -148,6 +151,7 @@
 	  for (var i = 0; i < markers.length; i++) {
 	    markers[i].setMap(map);
 	  }
+	  loading_overlay.style.visibility = "hidden";
 	}
 
 	// Removes the markers from the map, but keeps them in the array.
