@@ -2,6 +2,8 @@
 
 A map of the world showing which months it's best to visit places.
 
+Live version: https://kanenathan213.github.io/skyline/
+
 Written in pure HTML, CSS, and Javascript.
 
 ## To install:
@@ -10,7 +12,7 @@ Written in pure HTML, CSS, and Javascript.
 
 ## To test:
 
-`npm test`
+`npm test -- --watch`
 
 ## To build:
 
