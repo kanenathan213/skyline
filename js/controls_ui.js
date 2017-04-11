@@ -14,7 +14,7 @@ ControlsUI.initializeSelectedMonth = function() {
 
     for (var i = 0; i < month_wrap.children.length; i++) {
         if (i === selected_month) {
-            month_wrap.children[i].className += " selected";
+            month_wrap.children[i].className += " dselected";
             break;
         }
     }

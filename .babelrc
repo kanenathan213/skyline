@@ -1,0 +1,98 @@
+{
+  "env": {
+    "webpack": {
+      "plugins": [
+        "transform-decorators-legacy",
+        "transform-class-properties",
+        "transform-es2015-shorthand-properties",
+        "transform-object-entries",
+        "transform-async-to-generator"
+      ],
+      "presets": [
+        [
+          "env",
+          {
+            "targets": {
+              "browsers": [
+                "Firefox >= 26",
+                "Explorer >= 10",
+                "Safari >= 7",
+                "Chrome >= 36",
+
+                "iOS >= 5",
+                "Android >= 2",
+
+                "> 2% in US"
+              ]
+            },
+            "loose": true,
+            "modules": false,
+            "whitelist": [
+              "transform-es2015-literals",
+              "transform-es2015-template-literals"
+            ],
+            "useBuiltIns": true
+          }
+        ]
+      ]
+    },
+    "e2e": {
+      "plugins": [
+        "transform-decorators-legacy",
+        "transform-class-properties",
+        "transform-es2015-shorthand-properties",
+        "transform-object-entries",
+        "transform-async-to-generator"
+      ],
+      "presets": [
+        [
+          "env",
+          {
+            "targets": {
+              "browsers": [
+                "Firefox >= 26",
+                "Explorer >= 10",
+                "Safari >= 7",
+                "Chrome >= 36",
+
+                "iOS >= 5",
+                "Android >= 2",
+
+                "> 2% in US"
+              ]
+            },
+            "loose": true,
+            "modules": "commonjs",
+            "include": [
+              "transform-es2015-literals",
+              "transform-es2015-template-literals"
+            ],
+            "useBuiltIns": true
+          }
+        ]
+      ]
+    },
+    "node": {
+      "presets": [
+        [
+          "env",
+          {
+            "targets": {
+              "node": 4
+            },
+            "loose": true,
+            "modules": "commonjs"
+          }
+        ]
+      ]
+    },
+    "test": {
+      "plugins": [
+        "transform-object-rest-spread",
+        "transform-class-properties",
+        "transform-async-to-generator"
+      ],
+      "presets": ["es2015"]
+    }
+  }
+}
