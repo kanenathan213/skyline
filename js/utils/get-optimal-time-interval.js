@@ -1,4 +1,4 @@
-import DEFAULT_WEATHER_CONSTANTS from './constants/weather'
+import DEFAULT_WEATHER_CONSTANTS from 'constants/weather'
 
 function sortWeather(weatherScores) {
   weatherScores.sort((a, b) => a.score - b.score)

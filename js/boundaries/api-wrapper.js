@@ -1,6 +1,6 @@
 import { camelizeKeys } from 'humps'
-import store from './store'
-import { placesResource } from './config/api'
+import store from 'store'
+import { placesResource } from 'config/api'
 
 function handlePlacesDataSuccess(snapshot) {
   store.places = camelizeKeys(snapshot.val())

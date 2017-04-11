@@ -26,4 +26,10 @@ module.exports = {
   devServer: {
     publicPath: '/build/',
   },
+  resolve : {
+    modules: [
+      'js',
+      'node_modules',
+    ],
+  },
 }

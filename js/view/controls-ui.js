@@ -1,6 +1,6 @@
-import { getPlacesList } from './api-wrapper.js'
-import renderCities from './manage-map-markers.js'
-import store from './store.js'
+import { getPlacesList } from 'boundaries/api-wrapper'
+import renderCities from 'view/manage-map-markers'
+import store from 'store'
 
 const monthWrap = document.getElementById('month-wrap-id')
 

@@ -1,7 +1,7 @@
-import getMap from './initialize-map'
-import getOptimalTimeInterval from './get-optimal-time-interval'
-import store from './store'
-import MONTH_ABBREVIATIONS from './constants/months'
+import getMap from 'view/initialize-map'
+import getOptimalTimeInterval from 'utils/get-optimal-time-interval'
+import store from 'store'
+import MONTH_ABBREVIATIONS from 'constants/months'
 
 let bestWeatherMonths
 let markers = []

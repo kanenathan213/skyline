@@ -1,5 +1,5 @@
-import apiWrapper from './api-wrapper.js'
-import { mainResource } from './config/api'
+import apiWrapper from 'boundaries/api-wrapper.js'
+import { mainResource } from 'config/api'
 
 let uploadMonth = 0
 const callsNumber = document.getElementById('calls-number')
