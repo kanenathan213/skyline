@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "node_modules/.bin/webpack-dev-server --open --progress --watch",
-    "test": "jest"
+    "build": "webpack",
+    "test": "jest test/* --watch"
   },
   "repository": {
     "type": "git",
@@ -16,12 +17,34 @@
   "bugs": {
     "url": "https://github.com/kanenathan213/skyline/issues"
   },
+  "jest": {
+    "modulePaths": [
+      "<rootDir>/js",
+      "<rootDir>/node_modules"
+    ],
+    "resetModules": false,
+    "transform": {
+      "\\.(ts|js)x?$": "<rootDir>/node_modules/babel-jest"
+    },
+    "testRegex": "\\.spec\\.(ts|js)x?$",
+    "unmockedModulePathPatterns": [
+      "./node_modules/jasmine-reporters"
+    ],
+    "testEnvironment": "node",
+    "collectCoverage": false,
+    "collectCoverageFrom": [
+      "js/**/*.{js,ts}"
+    ],
+    "coverageDirectory": "./coverage/"
+  },
   "homepage": "https://github.com/kanenathan213/skyline#readme",
   "dependencies": {},
   "devDependencies": {
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.1",
+    "babel-jest": "^19.0.0",
     "babel-loader": "^6.4.1",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-preset-env": "^1.3.3",
     "babel-preset-es2015": "^6.24.1",
     "eslint": "^3.19.0",
@@ -31,7 +54,7 @@
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^6.10.3",
-    "jest-cli": "^0.8.2",
+    "jest": "^19.0.2",
     "webpack": "^2.3.3",
     "webpack-dev-server": "^2.4.2"
   }

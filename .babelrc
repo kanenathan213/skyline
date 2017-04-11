@@ -88,8 +88,6 @@
     },
     "test": {
       "plugins": [
-        "transform-object-rest-spread",
-        "transform-class-properties",
         "transform-async-to-generator"
       ],
       "presets": ["es2015"]

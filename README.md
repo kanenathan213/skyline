@@ -2,20 +2,44 @@
 
 A map of the world showing which months it's best to visit places.
 
-Live version: https://kanenathan213.github.io/skyline/
+See it live: https://www.nathanrkane.com/skyline/
 
-Written in pure HTML, CSS, and Javascript.
+Written in pure HTML, CSS, and Javascript. Build tools:
+- Webpack 2.3.x, `webpack-dev-server`
+- Babel
+- Jest
 
-## To install:
+## Prerequisites
+```
+Node v6.9.1
+```
 
-`npm install`
+## Getting started
+
+Clone and get into the repo:
+
+```
+git clone https://github.com/kanenathan213/skyline.git && cd skyline/
+```
+
+Install dependencies
+```
+npm install
+```
+
+Serve the app
+```
+npm start
+```
 
 ## To test:
 
-`npm test -- --watch`
+`npm test`
 
 ## To build:
 
-`webpack --watch`
+`npm run build`
 
-Open index.html in a browser
+## Todos:
+
+- Use Typescript
