@@ -1,23 +1,22 @@
-var ControlsUI = {};
+const ControlsUI = {}
 
-var BackendInterface = require('./backend_interface.js');
-var ManageMapMarkers = require('./manage_map_markers.js');
-var CurrentMonth = require('./current_month.js');
+const BackendInterface = require('./backend-interface.js')
+const ManageMapMarkers = require('./manage-map-markers.js')
+const CurrentMonth = require('./current-month.js')
 
-var selected_month = CurrentMonth.selected_month;
+const selectedMonth = CurrentMonth.selectedMonth
 
 ControlsUI.initializeSelectedMonth = function() {
+  if (selectedMonth === 11) {
+      CurrentMonth.setSelectedMonth(0)
+  }
 
-    if (selected_month === 11) {
-        CurrentMonth.setSelectedMonth(0);
+  for (let i = 0; i < month_wrap.children.length; i++) {
+    if (i === selectedMonth) {
+      month_wrap.children[i].className += " selected"
+      break
     }
-
-    for (var i = 0; i < month_wrap.children.length; i++) {
-        if (i === selected_month) {
-            month_wrap.children[i].className += " dselected";
-            break;
-        }
-    }
+  }
 }
 
 ControlsUI.removeSelectedClass = function(element) {

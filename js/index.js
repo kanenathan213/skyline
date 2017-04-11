@@ -1,7 +1,7 @@
-var InitializeMap = require('./initialize_map.js')
-var ControlsUI = require('./controls_ui.js')
-var BackendInterface = require('./backend_interface.js')
-var WeatherDataImport = require('./weather_data_import.js')
+var InitializeMap = require('./initialize-map.js')
+var ControlsUI = require('./controls-ui.js')
+var BackendInterface = require('./backend-interface.js')
+var WeatherDataImport = require('./weather-data-import.js')
 
 window.onload = function() {
     InitializeMap.initMap()

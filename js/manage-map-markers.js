@@ -1,9 +1,9 @@
 var ManageMapMarkers = {};
 
-var BackendInterface = require('./backend_interface.js');
-var InitializeMap = require('./initialize_map.js');
-var OptimalTimeInterval = require('./optimal_time_interval.js');
-var CurrentMonth = require('./current_month.js');
+var BackendInterface = require('./backend-interface.js');
+var InitializeMap = require('./initialize-map.js');
+var OptimalTimeInterval = require('./optimal-time-interval.js');
+var CurrentMonth = require('./current-month.js');
 
 var best_weather_months;
 var markers = [];

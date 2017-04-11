@@ -1,6 +1,6 @@
 var BackendInterface = {};
 
-var ManageMapMarkers = require('./manage_map_markers.js');
+var ManageMapMarkers = require('./manage-map-markers.js');
 
 var places_list_ref = new Firebase("https://skyline-maps.firebaseio.com/places");
 BackendInterface.myFirebaseRef = new Firebase("https://skyline-maps.firebaseio.com/");

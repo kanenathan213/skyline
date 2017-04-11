@@ -1,6 +1,6 @@
 var WeatherDataImport = {};
 
-var BackendInterface = require('./backend_interface.js');
+var BackendInterface = require('./backend-interface.js');
 
 var upload_month = 0;
 var calls_number = document.getElementById("calls-number");
