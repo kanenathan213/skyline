@@ -78,7 +78,7 @@ var BackendInterface = {};
 var ManageMapMarkers = __webpack_require__(3);
 
 var places_list_ref = new Firebase("https://skyline-maps.firebaseio.com/places");
-BackendInterface.myFirebaseRef = new Firebase("https://skyline-maps.firebaseio.com/");
+BackendInterface.mainResource = new Firebase("https://skyline-maps.firebaseio.com/");
 
 BackendInterface.getPlaces = function () {
   places_list_ref.once("value", handlePlacesDataSuccess, handlePlacesDataFail);
@@ -308,7 +308,7 @@ function addNewPlace() {
     var longitude = document.getElementById("longitude").value;
     var latitude = document.getElementById("latitude").value;
 
-    var places_ref = BackendInterface.myFirebaseRef.child("places/" + city_name + "/" + upload_month);
+    var places_ref = BackendInterface.mainResource.child("places/" + city_name + "/" + upload_month);
 
     var firebase_payload = {};
 
@@ -345,7 +345,7 @@ function addNewPlace() {
 }
 
 function getKey() {
-    var config_ref = BackendInterface.myFirebaseRef.child("config/WU_API_KEY");
+    var config_ref = BackendInterface.mainResource.child("config/WU_API_KEY");
     config_ref.on("value", function (snapshot) {
         WU_API_KEY = snapshot.val();
     }, function (errorObject) {

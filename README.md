@@ -42,4 +42,5 @@ npm start
 
 ## Todos:
 
-- Use Typescript
+- Migrate to Typescript
+- Use D3 to map out city's weather each year

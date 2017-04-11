@@ -1,9 +1,9 @@
-const CurrentMonth = {}
+const currentMonth = new Map()
 
-CurrentMonth.selectedMonth = new Date().getMonth() + 1
+const MAIN_KEY = 'month'
 
-CurrentMonth.getSelectedMonth = () => CurrentMonth.selectedMonth
+// Initialize Map
+currentMonth.set(MAIN_KEY, new Date().getMonth() + 1)
 
-CurrentMonth.setSelectedMonth = (newMonth) => { CurrentMonth.selectedMonth = newMonth }
-
-module.exports = CurrentMonth
+export default () => currentMonth.get(MAIN_KEY)
+export const setSelectedMonth = (newMonth) => { currentMonth.set(MAIN_KEY, newMonth) }

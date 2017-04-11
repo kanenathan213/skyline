@@ -10,6 +10,10 @@
   "env": {
     "browser" : true
   },
+  "globals": {
+    Firebase: true,
+    google: true
+  },
   "rules": {
     "key-spacing"          : 0,
     "max-len"              : [2, 120, 2],

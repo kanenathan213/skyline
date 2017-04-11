@@ -1,37 +1,34 @@
-const ControlsUI = {}
+import { getPlacesList } from './api-wrapper.js'
+import renderCities from './manage-map-markers.js'
+import getSelectedMonth, { setSelectedMonth } from './current-month.js'
 
-const BackendInterface = require('./backend-interface.js')
-const ManageMapMarkers = require('./manage-map-markers.js')
-const CurrentMonth = require('./current-month.js')
+const selectedMonth = getSelectedMonth()
 
-const selectedMonth = CurrentMonth.selectedMonth
+const monthWrap = document.getElementById('month-wrap-id')
 
-ControlsUI.initializeSelectedMonth = function() {
+export default () => {
   if (selectedMonth === 11) {
-      CurrentMonth.setSelectedMonth(0)
+    setSelectedMonth(0)
   }
 
-  for (let i = 0; i < month_wrap.children.length; i++) {
+  for (let i = 0; i < monthWrap.children.length; i += 1) {
     if (i === selectedMonth) {
-      month_wrap.children[i].className += " selected"
+      monthWrap.children[i].classList.add('selected')
       break
     }
   }
 }
 
-ControlsUI.removeSelectedClass = function(element) {
-    for (var i = 0; i < element.children.length; i++) {
-        element.children[i].className = "month-button";
-    }
+export const removeSelectedClass = (element) => {
+  for (let i = 0; i < element.children.length; i += 1) {
+    element.children[i].classList.remove('selected')
+  }
 }
 
-var month_wrap = document.getElementById("month-wrap-id");
-month_wrap.onclick = function(event) {
-    var element = event.target;
-    ControlsUI.removeSelectedClass(element.parentNode);
-    element.className += " selected";
-    CurrentMonth.setSelectedMonth(Number(element.value));
-    ManageMapMarkers.renderCities(BackendInterface.places_list);
+monthWrap.onclick = (event) => {
+  const element = event.target
+  removeSelectedClass(element.parentNode)
+  element.classList.add('selected')
+  setSelectedMonth(Number(element.value))
+  renderCities(getPlacesList())
 }
-
-module.exports = ControlsUI;

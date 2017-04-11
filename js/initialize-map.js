@@ -1,15 +1,3 @@
-var InitializeMap = {};
+import DEFAULT_MAP_OPTIONS from './config/map'
 
-InitializeMap.map = null;
-
-InitializeMap.initMap = function() {
-
-  InitializeMap.map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 20, lng: 20},
-    scrollwheel: true,
-    zoom: 2,
-    minZoom: 2
-  });
-}
-
-module.exports = InitializeMap;
+export default () => new google.maps.Map(document.getElementById('map'), DEFAULT_MAP_OPTIONS)

@@ -1,46 +1,34 @@
-var OptimalTimeInterval = {};
+import DEFAULT_WEATHER_CONSTANTS from './constants/weather'
 
-var ideal_temp = 22;
-var ideal_precip = 0;
-var number_of_ideal_months = 4;
-
-OptimalTimeInterval.findBestMonths = function(city_data) {
-
-    var weather_scores = [];
-    var ideal_months = [];
-
-    for (var i = 0; i < city_data.length; i++) {
-
-        var raw_precip_percentage = city_data[i].chance_of.chanceofprecip.percentage;
-        var formatted_precip_percentage = Number(raw_precip_percentage);
-
-        var raw_high_temp_avg = city_data[i].temp_high.avg['C'];
-        var raw_low_temp_avg = city_data[i].temp_low.avg['C'];
-
-        var formatted_avg_temp = (Number(raw_high_temp_avg) + Number(raw_low_temp_avg))/2;
-        var difference_from_ideal_temp = Math.abs(ideal_temp - formatted_avg_temp);
-
-        var weather_score_item = 0.3 * (formatted_precip_percentage / 100) + 0.7 * (difference_from_ideal_temp / 25);
-
-        weather_scores.push({
-            "score": weather_score_item,
-            "month": i
-        });
-    }
-
-    sortWeather(weather_scores);
-
-    for (var i = 0; i < number_of_ideal_months; i++ ) {
-        ideal_months.push(weather_scores[i].month);
-    }
-    return ideal_months;
+function sortWeather(weatherScores) {
+  weatherScores.sort((a, b) => a.score - b.score)
 }
 
-function sortWeather(weather_scores) {
-    weather_scores.sort(
-        function(a, b) {
-            return a.score - b.score
-    });
-}
+export default (cityData) => {
+  const weatherScores = []
+  const idealMonths = []
 
-module.exports = OptimalTimeInterval;
+  for (let i = 0; i < cityData.length; i += 1) {
+    const rawPrecipPercentage = cityData[i].chanceOf.chanceofprecip.percentage
+    const formattedPrecipPercentage = Number(rawPrecipPercentage)
+
+    const rawHighTempAvg = cityData[i].tempHigh.avg.C
+    const rawLowTempAvg = cityData[i].tempLow.avg.C
+
+    const formattedAvgTemp = (Number(rawHighTempAvg) + Number(rawLowTempAvg)) / 2
+    const idealTemp = Math.abs(DEFAULT_WEATHER_CONSTANTS.idealTemp - formattedAvgTemp)
+
+    const weatherScoreItem = (0.3 * (formattedPrecipPercentage / 100)) + (0.7 * (idealTemp / 25))
+
+    weatherScores.push({
+      score: weatherScoreItem,
+      month: i,
+    })
+  }
+
+  sortWeather(weatherScores)
+  for (let i = 0; i < DEFAULT_WEATHER_CONSTANTS.idealMonthCount; i += 1) {
+    idealMonths.push(weatherScores[i].month)
+  }
+  return idealMonths
+}
