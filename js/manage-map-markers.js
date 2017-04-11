@@ -1,6 +1,6 @@
 import getMap from './initialize-map'
-import getOptimalTimeInterval from './optimal-time-interval'
-import getSelectedMonth from './current-month'
+import getOptimalTimeInterval from './get-optimal-time-interval'
+import store from './store'
 import MONTH_ABBREVIATIONS from './constants/months'
 
 let bestWeatherMonths
@@ -77,7 +77,7 @@ export default (cities) => {
     bestWeatherMonths = getOptimalTimeInterval(cities[key])
     latitude = cities[key][0].latitude
     longitude = cities[key][0].longitude
-    const selectedMonth = getSelectedMonth()
+    const selectedMonth = store.selectedMonthIndex
     if (bestWeatherMonths.indexOf(selectedMonth) !== -1) {
       prepMarkers(latitude, longitude, key, cities[key][selectedMonth].tempHigh.avg.C,
         cities[key][selectedMonth].tempLow.avg.C,

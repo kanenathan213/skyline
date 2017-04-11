@@ -1,18 +1,12 @@
 import { getPlacesList } from './api-wrapper.js'
 import renderCities from './manage-map-markers.js'
-import getSelectedMonth, { setSelectedMonth } from './current-month.js'
-
-const selectedMonth = getSelectedMonth()
+import store from './store.js'
 
 const monthWrap = document.getElementById('month-wrap-id')
 
 export default () => {
-  if (selectedMonth === 11) {
-    setSelectedMonth(0)
-  }
-
   for (let i = 0; i < monthWrap.children.length; i += 1) {
-    if (i === selectedMonth) {
+    if (i === store.selectedMonthIndex) {
       monthWrap.children[i].classList.add('selected')
       break
     }
@@ -29,6 +23,6 @@ monthWrap.onclick = (event) => {
   const element = event.target
   removeSelectedClass(element.parentNode)
   element.classList.add('selected')
-  setSelectedMonth(Number(element.value))
+  store.selectedMonthIndex = Number(element.value)
   renderCities(getPlacesList())
 }
