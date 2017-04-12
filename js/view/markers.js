@@ -1,5 +1,7 @@
-import getMap from 'view/initialize-map'
+import { mapObject } from 'view/map'
+import dataKeys from 'constants/dataKeys'
 import getOptimalTimeInterval from 'utils/get-optimal-time-interval'
+import startCase from 'lodash/startCase'
 import store from 'store'
 import MONTH_ABBREVIATIONS from 'constants/months'
 
@@ -32,44 +34,33 @@ function prepMarkers(lat, lng, name, highTemp, lowTemp, precipChance, bestMonths
   }
   const marker = new google.maps.Marker({
     position: latLng,
-    map: getMap(),
+    map: mapObject,
     title: name,
   })
-
-  getMap().addListener('click', () => {
+  mapObject.addListener('click', () => {
     infoWindow.close()
   })
 
   marker.addListener('click', () => {
     infoWindow.close()
     let bestMonthsNames = ''
-    bestMonths.sort((a, b) => a - b)
-    for (let i = 0; i < bestMonths.length; i += 1) {
-      bestMonthsNames += `${bestMonthsNames}${MONTH_ABBREVIATIONS[bestMonths[i]]}`
-      if (i !== bestMonths.length - 1) {
+    const sortedBestMonths = bestMonths.sort((a, b) => a - b)
+    for (let i = 0; i < sortedBestMonths.length; i += 1) {
+      bestMonthsNames = `${bestMonthsNames}${MONTH_ABBREVIATIONS[sortedBestMonths[i]]}`
+      if (i !== sortedBestMonths.length - 1) {
         bestMonthsNames += ', '
       }
     }
-    /* eslint-disable */
-    infoWindow.setContent('<div>' +
-                                '<h2>' + name +
-                                '</h2>' +
-                                '<div> Low: ' + lowTemp +
-                                '&#8451;</div>' +
-                                '<div> High: ' + highTemp +
-                                '&#8451;</div>' +
-                                '<div>Precip: ' + precipChance +
-                                '%</div>' +
-                                '<div> Best months: ' + bestMonthsNames +
-                            '</div>')
-    infoWindow.open(InitializeMap.map, marker)
-    /* eslint-enable */
+    infoWindow.setContent(
+      `<div><h2>${name}</h2><div> Low: ${lowTemp}&#8451;</div><div> High: ${highTemp}
+      &#8451;</div><div>Precip: ${precipChance}%</div><div> Best months: ${bestMonthsNames}</div>`)
+    infoWindow.open(mapObject, marker)
   })
 
   markers.push(marker)
 }
 
-export default (cities) => {
+const renderMapMarkers = (cities) => {
   deleteMarkers()
   let latitude
   let longitude
@@ -78,11 +69,15 @@ export default (cities) => {
     latitude = cities[key][0].latitude
     longitude = cities[key][0].longitude
     const selectedMonth = store.selectedMonthIndex
-    if (bestWeatherMonths.indexOf(selectedMonth) !== -1) {
-      prepMarkers(latitude, longitude, key, cities[key][selectedMonth].tempHigh.avg.C,
-        cities[key][selectedMonth].tempLow.avg.C,
+
+    if (bestWeatherMonths.includes(selectedMonth)) {
+      prepMarkers(latitude, longitude, startCase(key),
+        cities[key][selectedMonth].tempHigh.avg[dataKeys.TEMPERATURE_TYPE],
+        cities[key][selectedMonth].tempLow.avg[dataKeys.TEMPERATURE_TYPE],
         cities[key][selectedMonth].chanceOf.chanceofprecip.percentage, bestWeatherMonths)
     }
   })
-  setMapOnAll(getMap())
+  setMapOnAll(mapObject)
 }
+
+export default renderMapMarkers

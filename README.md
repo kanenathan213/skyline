@@ -4,10 +4,11 @@ A map of the world showing which months it's best to visit places.
 
 See it live: https://www.nathanrkane.com/skyline/
 
-Written in pure HTML, CSS, and Javascript. Build tools:
+Flux-inspired architecture, written in pure HTML, CSS, and Javascript. Other tooling:
 - Webpack 2.3.x, `webpack-dev-server`
 - Babel
 - Jest
+- (PubSub)[https://github.com/mroderick/PubSubJS]
 
 ## Prerequisites
 ```

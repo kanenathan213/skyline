@@ -35,6 +35,7 @@ function addNewPlace() {
 
   let firebasePayload = {}
 
+  // TODO: change to fetch
   const xhttp = new XMLHttpRequest()
   xhttp.onreadystatechange = () => {
     if (xhttp.readyState === 4 && xhttp.status === 200) {
