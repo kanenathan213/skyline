@@ -1,5 +1,5 @@
 import { mapObject } from 'view/map'
-import dataKeys from 'constants/dataKeys'
+import dataKeys from 'constants/data-keys'
 import getOptimalTimeInterval from 'utils/get-optimal-time-interval'
 import startCase from 'lodash/startCase'
 import store from 'store'
@@ -11,23 +11,19 @@ const infoWindow = new google.maps.InfoWindow()
 
 const loadingOverlay = document.getElementById('loading-overlay-element')
 
-function setMapOnAll(map) {
+function renderMarkers() {
   for (let i = 0; i < markers.length; i += 1) {
-    markers[i].setMap(map)
+    markers[i].setMap(mapObject)
   }
   loadingOverlay.style.visibility = 'hidden'
 }
 
 function clearMarkers() {
-  setMapOnAll(null)
-}
-
-function deleteMarkers() {
-  clearMarkers()
+  markers.forEach(marker => marker.setMap(null))
   markers = []
 }
 
-function prepMarkers(lat, lng, name, highTemp, lowTemp, precipChance, bestMonths) {
+function updateMarker(lat, lng, name, highTemp, lowTemp, precipChance, bestMonths) {
   const latLng = {
     lat: Number(lat),
     lng: Number(lng),
@@ -61,7 +57,7 @@ function prepMarkers(lat, lng, name, highTemp, lowTemp, precipChance, bestMonths
 }
 
 const renderMapMarkers = (cities) => {
-  deleteMarkers()
+  clearMarkers()
   let latitude
   let longitude
   Object.keys(cities).forEach((key) => {
@@ -71,13 +67,13 @@ const renderMapMarkers = (cities) => {
     const selectedMonth = store.selectedMonthIndex
 
     if (bestWeatherMonths.includes(selectedMonth)) {
-      prepMarkers(latitude, longitude, startCase(key),
+      updateMarker(latitude, longitude, startCase(key),
         cities[key][selectedMonth].tempHigh.avg[dataKeys.TEMPERATURE_TYPE],
         cities[key][selectedMonth].tempLow.avg[dataKeys.TEMPERATURE_TYPE],
         cities[key][selectedMonth].chanceOf.chanceofprecip.percentage, bestWeatherMonths)
     }
   })
-  setMapOnAll(mapObject)
+  renderMarkers()
 }
 
 export default renderMapMarkers

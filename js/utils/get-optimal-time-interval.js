@@ -1,5 +1,5 @@
 import DEFAULT_WEATHER_CONSTANTS from 'constants/weather'
-import dataKeys from 'constants/dataKeys'
+import dataKeys from 'constants/data-keys'
 
 const sortWeather = weatherScores => weatherScores.sort((a, b) => a.score - b.score)
 
