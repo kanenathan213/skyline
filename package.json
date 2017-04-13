@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node_modules/.bin/webpack-dev-server --open --progress --watch",
     "build": "webpack",
-    "test": "jest test/* --watch"
+    "test": "jest test/* -i --bail",
+    "test:watch" "jest test/* --watch"
   },
   "repository": {
     "type": "git",
