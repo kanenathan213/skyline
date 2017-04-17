@@ -1,9 +1,9 @@
-import { mapObject } from 'view/map'
+import { mapInstance } from 'view/map'
 import dataKeys from 'constants/data-keys'
 import getOptimalTimeInterval from 'utils/get-optimal-time-interval'
 import startCase from 'lodash/startCase'
-import store from 'store'
 import MONTH_ABBREVIATIONS from 'constants/months'
+import type { StateType } from '../types/state'
 
 let bestWeatherMonths
 let markers = []
@@ -11,29 +11,29 @@ const infoWindow = new google.maps.InfoWindow()
 
 const loadingOverlay = document.getElementById('loading-overlay-element')
 
-function renderMarkers() {
+const renderMarkers = () => {
   for (let i = 0; i < markers.length; i += 1) {
-    markers[i].setMap(mapObject)
+    markers[i].setMap(mapInstance)
   }
   loadingOverlay.style.visibility = 'hidden'
 }
 
-function clearMarkers() {
+const clearMarkers = () => {
   markers.forEach(marker => marker.setMap(null))
   markers = []
 }
 
-function updateMarker(lat, lng, name, highTemp, lowTemp, precipChance, bestMonths) {
+const updateMarker = (lat, lng, name, highTemp, lowTemp, precipChance, bestMonths) => {
   const latLng = {
     lat: Number(lat),
     lng: Number(lng),
   }
   const marker = new google.maps.Marker({
     position: latLng,
-    map: mapObject,
+    map: mapInstance,
     title: name,
   })
-  mapObject.addListener('click', () => {
+  mapInstance.addListener('click', () => {
     infoWindow.close()
   })
 
@@ -50,13 +50,14 @@ function updateMarker(lat, lng, name, highTemp, lowTemp, precipChance, bestMonth
     infoWindow.setContent(
       `<div><h2>${name}</h2><div> Low: ${lowTemp}&#8451;</div><div> High: ${highTemp}
       &#8451;</div><div>Precip: ${precipChance}%</div><div> Best months: ${bestMonthsNames}</div>`)
-    infoWindow.open(mapObject, marker)
+    infoWindow.open(mapInstance, marker)
   })
 
   markers.push(marker)
 }
 
-const renderMapMarkers = (cities) => {
+const renderMapMarkers = (state: StateType) => {
+  const { places: cities, selectedMonthIndex } = state
   clearMarkers()
   let latitude
   let longitude
@@ -64,7 +65,7 @@ const renderMapMarkers = (cities) => {
     bestWeatherMonths = getOptimalTimeInterval(cities[key])
     latitude = cities[key][0].latitude
     longitude = cities[key][0].longitude
-    const selectedMonth = store.selectedMonthIndex
+    const selectedMonth = selectedMonthIndex
 
     if (bestWeatherMonths.includes(selectedMonth)) {
       updateMarker(latitude, longitude, startCase(key),

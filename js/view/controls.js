@@ -9,8 +9,10 @@ const clearSelectedClass = () => {
 }
 
 // Update store with new selected month
-monthWrap.onclick = (e) => {
-  store.selectedMonthIndex = Number(e.target.value)
+if (monthWrap) {
+  monthWrap.onclick = (e) => {
+    store.selectedMonthIndex = Number(e.target.value)
+  }
 }
 
 // The store re-renders the view with this function

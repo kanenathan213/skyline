@@ -1,4 +1,3 @@
-import PubSub from 'pubsub-js'
 import renderSelectedMonth from 'view/controls'
 import renderMapMarkers from 'view/markers'
 import getCurrentMonth from 'boundaries/get-current-month'
@@ -9,10 +8,10 @@ const initialState = {
   selectedMonthIndex: getCurrentMonth,
 }
 
-PubSub.subscribe(eventTypes.STATE_UPDATED, (type, data) => {
-  renderSelectedMonth(data.selectedMonthIndex)
-  renderMapMarkers(data.places)
-})
+const updateView = (type, updatedData) => {
+  renderSelectedMonth(updatedData)
+  renderMapMarkers(updatedData)
+}
 
 const handler = {
   get: (target, property) => target[property],
@@ -29,7 +28,7 @@ const handler = {
     console.log('NEXT STATE:', target) // eslint-disable-line
     console.log('') // eslint-disable-line
 
-    PubSub.publish(eventTypes.STATE_UPDATED, target)
+    updateView(eventTypes.STATE_UPDATED, target)
     return true
   },
 }

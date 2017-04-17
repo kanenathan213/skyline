@@ -36,16 +36,17 @@
     "collectCoverageFrom": [
       "js/**/*.{js,ts}"
     ],
-    "coverageDirectory": "./coverage/"
+    "coverageDirectory": "./coverage/",
+    "setupTestFrameworkScriptFile": "<rootDir>/test/setup.js"
   },
   "homepage": "https://github.com/kanenathan213/skyline#readme",
   "dependencies": {
     "humps": "^2.0.0",
     "keymirror": "^0.1.1",
-    "lodash": "^4.17.4",
-    "pubsub-js": "^1.5.6"
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.1",
     "babel-jest": "^19.0.0",

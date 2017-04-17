@@ -1,7 +1,7 @@
 import getOptimalTimeInterval from 'utils/get-optimal-time-interval'
 
 describe('getOptimalTimeInterval', () => {
-  it('should return a sorted (increasing) list of 4 month indicies', () => {
+  it('should return a sorted (increasing) list of 4 month indicies, based on the scoring formula', () => {
     const testInput = [
       {
         chanceOf: {

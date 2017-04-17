@@ -8,6 +8,7 @@ Flux-inspired architecture, written in pure HTML, CSS, and Javascript. Other too
 - Webpack 2, `webpack-dev-server`
 - Babel
 - Jest
+- Firebase backend
 
 ## Prerequisites
 ```

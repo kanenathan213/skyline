@@ -1,0 +1,13 @@
+[include]
+
+[options]
+
+module.name_mapper='^types\/(.*)$' -> '<PROJECT_ROOT>/js/types/\1'
+
+strip_root=true
+
+[libs]
+./js/types/
+decls/
+
+[ignore]
