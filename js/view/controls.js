@@ -16,9 +16,9 @@ if (monthWrap) {
 }
 
 // The store re-renders the view with this function
-const updateSelectedTab = () => {
+const updateSelectedTab = (state) => {
   clearSelectedClass()
-  monthWrap.children[store.selectedMonthIndex].classList.add('selected')
+  monthWrap.children[state.selectedMonthIndex].classList.add('selected')
 }
 
 export default updateSelectedTab

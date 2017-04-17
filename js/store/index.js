@@ -33,4 +33,8 @@ const handler = {
   },
 }
 
-export default new Proxy(initialState, handler)
+const store = new Proxy(initialState, handler)
+
+updateView('', initialState)
+
+export default store

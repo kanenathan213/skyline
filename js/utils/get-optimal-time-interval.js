@@ -1,5 +1,6 @@
 import DEFAULT_WEATHER_CONSTANTS from 'constants/weather'
 import dataKeys from 'constants/data-keys'
+import flow from 'lodash/flow'
 
 const sortWeather = weatherScores => weatherScores.sort((a, b) => a.score - b.score)
 
@@ -23,9 +24,7 @@ const getWeatherScores = places => places.map((place, i) => {
 })
 
 export default (cityData) => {
-  const weatherScores = getWeatherScores(cityData)
-  const sortedScores = sortWeather(weatherScores)
-  const months = getMonthsList(sortedScores)
+  const getMonths = flow(getWeatherScores, sortWeather, getMonthsList)
 
-  return months.slice(0, DEFAULT_WEATHER_CONSTANTS.idealMonthCount)
+  return getMonths(cityData).slice(0, DEFAULT_WEATHER_CONSTANTS.idealMonthCount)
 }

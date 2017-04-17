@@ -1,8 +1,7 @@
 import * as renderSelectedMonth from 'view/controls'
-// import renderMapMarkers from 'view/markers'
 import store from 'store'
 
-jest.mock('view/controls')
+jest.mock('view/controls', () => () => {})
 jest.mock('view/markers')
 jest.mock('view/map')
 

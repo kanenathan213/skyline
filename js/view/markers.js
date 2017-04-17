@@ -3,7 +3,6 @@ import dataKeys from 'constants/data-keys'
 import getOptimalTimeInterval from 'utils/get-optimal-time-interval'
 import startCase from 'lodash/startCase'
 import MONTH_ABBREVIATIONS from 'constants/months'
-import type { StateType } from '../types/state'
 
 let bestWeatherMonths
 let markers = []
@@ -56,7 +55,7 @@ const updateMarker = (lat, lng, name, highTemp, lowTemp, precipChance, bestMonth
   markers.push(marker)
 }
 
-const renderMapMarkers = (state: StateType) => {
+const renderMapMarkers = (state) => {
   const { places: cities, selectedMonthIndex } = state
   clearMarkers()
   let latitude
